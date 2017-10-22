@@ -1,0 +1,10 @@
+.title {
+    text-anchor:middle;
+}
+
+.chart {
+    position:fixed;
+    top:100px;
+    right:100px;
+
+}

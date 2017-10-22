@@ -1,0 +1,22 @@
+@import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css");
+.body {
+	margin: 0 !important;
+	padding: 0 !important;
+}
+.element {
+  /* height:1000px; */
+  padding-bottom:250px;
+	background-color: #ededed;
+	/* font-size: 45px; */
+	border-top:1px solid #000;
+	padding-top:55px;
+	padding-left:10px;
+}
+
+.element:last-of-type {
+  margin-bottom:500px;
+}
+
+.active {
+	color:red !important;
+}
