@@ -103,13 +103,12 @@ var ScatterPlot = function() {
 
             // Draw markers
             let circles = ele.select('.chartG').selectAll('circle').data(data, (d) => d.id);
-
             // Use the .enter() method to get entering elements, and assign initial position
             circles.enter().append('circle')
-                .attr('fill', fill)
                 // .attr('cy', chartHeight)
                 .style('opacity', .3)
                 .attr('cx', (d) => xScale(d.x))
+                .attr('cy', chartHeight)
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide)
                 // Transition properties of the + update selections
@@ -118,6 +117,7 @@ var ScatterPlot = function() {
                 .transition()
                 .duration(1500)
                 .delay(delay)
+                .style('fill', fill)
                 .attr('cx', (d) => xScale(d.x))
                 .attr('cy', (d) => yScale(d.y))
 

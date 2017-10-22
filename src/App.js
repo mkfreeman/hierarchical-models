@@ -63,9 +63,13 @@ class App extends React.Component {
         super(props);
         this.scrollToTop = this.scrollToTop.bind(this);
         this.state = {
-            dataStep: 1,
+            dataStep: 0,
             allData: [],
-            colorScale: d3.scaleOrdinal().range(d3.schemeCategory10)
+            colorScales: [d3.scaleOrdinal().range(['black']),
+                d3.scaleOrdinal().range(d3.schemeCategory10),
+                d3.scaleOrdinal().range(d3.schemeCategory10),
+                d3.scaleOrdinal().range(d3.schemeCategory10),
+                d3.scaleOrdinal().range(d3.schemeCategory10)]
         }
     }
 
@@ -84,7 +88,7 @@ class App extends React.Component {
             // let formatted = data.map((d) => {{id:d.id, x:d.experience, y:d.salary})
             let formatted = data.map(function(d) {
                 return {
-                    id: d.id,
+                    id: d.ids,
                     x: d.experience,
                     y: d.salary,
                     color: d.department
@@ -112,12 +116,18 @@ class App extends React.Component {
     // }
     render() {
         console.log('state ', this.state)
+        let colorScale = this.state.colorScales[this.state.dataStep];
+        console.log(colorScale.range(), 'colorScale range')
+        let chartData = this.state.allData[this.state.dataStep];
         return (
             <div>
               <nav className="navbar navbar-default navbar-fixed-top">
                 <div className="container-fluid">
                   <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul className="nav navbar-nav">
+                      <li>
+                        <Link activeClass="active" onSetActive={ this.handleSetActive.bind(this) } className="test0" to="test0" spy={ true } smooth={ true } duration={ 500 }>Test 0</Link>
+                      </li>
                       <li>
                         <Link activeClass="active" onSetActive={ this.handleSetActive.bind(this) } className="test1" to="test1" spy={ true } smooth={ true } duration={ 500 }>Test 1</Link>
                       </li>
@@ -127,24 +137,22 @@ class App extends React.Component {
                       <li>
                         <Link activeClass="active" onSetActive={ this.handleSetActive.bind(this) } className="test3" to="test3" spy={ true } smooth={ true } duration={ 500 }>Test 3</Link>
                       </li>
-                      <li>
-                        <Link activeClass="active" onSetActive={ this.handleSetActive.bind(this) } className="test4" to="test4" spy={ true } smooth={ true } duration={ 500 }>Test 4</Link>
-                      </li>
                     </ul>
                   </div>
                 </div>
               </nav>
-              <ScatterPlotComponent colorScale={ (d) => this.state.colorScale(d.color) } data={ this.state.allData[this.state.dataStep] } xTitle="Years of Experience" yTitle="Salary" />
+              <ScatterPlotComponent colorScale={ (d) => colorScale(d.color) } data={ chartData } xTitle="Years of Experience" yTitle="Salary" />
+              <Element name="test0" className="element">
+                test 0
+              </Element>
               <Element name="test1" className="element">
+                test 1
               </Element>
               <Element name="test2" className="element">
                 test 2
               </Element>
               <Element name="test3" className="element">
                 test 3
-              </Element>
-              <Element name="test4" className="element">
-                test 4
               </Element>
             </div>
             );
