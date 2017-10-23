@@ -25,8 +25,12 @@ class ScatterPlotComponent extends Component {
             .radius(this.props.radius);
 
         // Call d3 update
+        console.log('scatterplot props', this.props)
         d3.select(this.root)
-            .datum(this.props.data)
+            .datum({
+                scatter: this.props.data,
+                line: this.props.lineData
+            })
             .call(this.scatter);
     }
     // Update on new props
@@ -68,7 +72,8 @@ ScatterPlotComponent.defaultProps = {
         x: 5,
         y: 1200,
         id: "c"
-    }]
+    }],
+    lineData: []
 }
 
 export default ScatterPlotComponent;

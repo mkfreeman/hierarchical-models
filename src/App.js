@@ -17,46 +17,6 @@ var durationFn = function(deltaTop) {
     return deltaTop;
 };
 
-const allData = [
-    [{
-        x: 10,
-        y: 1000,
-        id: "a"
-    }, {
-        x: 100,
-        y: 100,
-        id: "b"
-    }, {
-        x: 50,
-        y: 10,
-        id: "c"
-    }],
-    [{
-        x: 10,
-        y: 1000,
-        id: "a"
-    }, {
-        x: 10,
-        y: 1000,
-        id: "b"
-    }, {
-        x: 5,
-        y: 1200,
-        id: "c"
-    }], [{
-        x: 100,
-        y: 1000,
-        id: "a"
-    }, {
-        x: 10,
-        y: 10000,
-        id: "b"
-    }, {
-        x: 50,
-        y: 100,
-        id: "c"
-    }]
-]
 class App extends React.Component {
 
     constructor(props) {
@@ -65,6 +25,7 @@ class App extends React.Component {
         this.state = {
             dataStep: 0,
             allData: [],
+            allLineData: [],
             colorScales: [d3.scaleOrdinal().range(['black']),
                 d3.scaleOrdinal().range(d3.schemeCategory10),
                 d3.scaleOrdinal().range(d3.schemeCategory10),
@@ -84,7 +45,6 @@ class App extends React.Component {
 
         scrollSpy.update();
         d3.csv('data/faculty-data.csv', function(error, data) {
-            console.log('data! ', data);
             // let formatted = data.map((d) => {{id:d.id, x:d.experience, y:d.salary})
             let formatted = data.map(function(d) {
                 return {
@@ -94,8 +54,28 @@ class App extends React.Component {
                     color: d.department
                 }
             })
+
+            // Function to grab column of interest
+            let GetLineData = function(col) {
+                return data.map(function(d) {
+                    return {
+                        x: d.experience,
+                        y: d[col],
+                        color: d.department
+                    }
+                })
+            }
+            // Function to nest
+            let lineNest = d3.nest()
+                .key((d) => d.color);
+
+            let randomSlopes = lineNest.entries(GetLineData('random.slope.preds'));
+            let randomIntercept = lineNest.entries(GetLineData('random.intercpet.preds'));
+            let randomSlopeIntercept = lineNest.entries(GetLineData('random.slope.int.preds'));
+            let simpleModel = lineNest.entries(GetLineData('simple.model'))
             this.setState({
-                allData: [formatted, formatted, formatted]
+                allData: [formatted, formatted, formatted],
+                allLineData: [simpleModel, randomSlopes, randomIntercept, randomSlopeIntercept]
             });
         }.bind(this))
     }
@@ -115,10 +95,10 @@ class App extends React.Component {
 
     // }
     render() {
-        console.log('state ', this.state)
         let colorScale = this.state.colorScales[this.state.dataStep];
-        console.log(colorScale.range(), 'colorScale range')
         let chartData = this.state.allData[this.state.dataStep];
+        let lineData = this.state.allLineData[this.state.dataStep];
+        console.log("line data ", lineData, chartData)
         return (
             <div>
               <nav className="navbar navbar-default navbar-fixed-top">
@@ -141,7 +121,7 @@ class App extends React.Component {
                   </div>
                 </div>
               </nav>
-              <ScatterPlotComponent colorScale={ (d) => colorScale(d.color) } data={ chartData } xTitle="Years of Experience" yTitle="Salary" />
+              <ScatterPlotComponent lineData={ lineData } colorScale={ colorScale } data={ chartData } xTitle="Years of Experience" yTitle="Salary" />
               <Element name="test0" className="element">
                 test 0
               </Element>

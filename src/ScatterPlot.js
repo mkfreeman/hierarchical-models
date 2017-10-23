@@ -10,8 +10,9 @@ var ScatterPlot = function() {
         yScale = d3.scaleLinear(),
         xTitle = 'X Axis Title',
         yTitle = 'Y Axis Title',
+        duration = 1000,
         colorScale = (d) => d.color || 'green',
-        fill = (d) => colorScale(d),
+        // fill = (d) => colorScale(d),
         radius = (d) => 6,
         margin = {
             left: 70,
@@ -83,12 +84,12 @@ var ScatterPlot = function() {
             ele.select('svg').call(tip);
 
             // Calculate x and y scales
-            let xMax = d3.max(data, (d) => +d.x) * 1.05;
-            let xMin = d3.min(data, (d) => +d.x) * .95;
+            let xMax = d3.max(data.scatter, (d) => +d.x) * 1.05;
+            let xMin = d3.min(data.scatter, (d) => +d.x) * .95;
             xScale.range([0, chartWidth]).domain([xMin, xMax]);
 
-            var yMin = d3.min(data, (d) => +d.y) * .95;
-            var yMax = d3.max(data, (d) => +d.y) * 1.05;
+            var yMin = d3.min(data.scatter, (d) => +d.y) * .95;
+            var yMax = d3.max(data.scatter, (d) => +d.y) * 1.05;
             yScale.range([chartHeight, 0]).domain([yMin, yMax]);
 
             // Update axes
@@ -102,7 +103,8 @@ var ScatterPlot = function() {
             ele.select('.title.y').text(yTitle)
 
             // Draw markers
-            let circles = ele.select('.chartG').selectAll('circle').data(data, (d) => d.id);
+            console.log('circle data ', data)
+            let circles = ele.select('.chartG').selectAll('circle').data(data.scatter, (d) => d.id);
             // Use the .enter() method to get entering elements, and assign initial position
             circles.enter().append('circle')
                 // .attr('cy', chartHeight)
@@ -117,12 +119,82 @@ var ScatterPlot = function() {
                 .transition()
                 .duration(1500)
                 .delay(delay)
-                .style('fill', fill)
+                // .style('fill', fill)
+                .style('fill', (d) => colorScale(d.color))
                 .attr('cx', (d) => xScale(d.x))
                 .attr('cy', (d) => yScale(d.y))
 
             // Use the .exit() and .remove() methods to remove elements that are no longer in the data
             circles.exit().remove();
+
+            // Define a line function that will return a `path` element based on data
+            var line = d3.line()
+                .x(function(d) {
+                    return xScale(+d.x)
+                })
+                .y(function(d) {
+                    return yScale(+d.y)
+                });
+            // let circles = ele.select('.chartG').selectAll('circle').data(data.scatter, (d) => d.id);
+            console.log('line data ', data.line)
+            let lines = ele.select('.chartG').selectAll('path').data(data.line, (d) => d.key);
+
+            // Handle entering elements (see README.md)
+            lines.enter().append("path")
+                .attr("d", function(d) {
+                    return line(d.values)
+                })
+                .attr("fill", "none")
+                .attr("stroke-width", 1.5)
+                .merge(lines)
+                .transition()
+                .duration(duration)
+                .attr("d", function(d) {
+                    return line(d.values)
+                })
+                .attr("stroke", function(d) {
+                    console.log(d.key, colorScale(d.key))
+                    return colorScale(d.key)
+                })
+                // .attr("stroke-dasharray", function(d) {
+                //     var totalLength = d3.select(this).node().getTotalLength();
+                //     return (totalLength + " " + totalLength);
+                // })
+                // .attr("stroke-dashoffset", function(d) {
+                //     return -d3.select(this).node().getTotalLength();
+                // })
+                // .transition()
+                // .duration(2000)
+                // .attr("stroke-dashoffset", function(d) {
+                //     return 0;
+                // });
+
+                // Handle updating elements (see README.md)
+                // countries.attr("stroke-dasharray", "none")
+                //     .transition()
+                //     .duration(2000)
+                //     .attr("d", function(d) {
+                //         return line(d.values)
+                //     })
+                //     .attr('stroke', function(d) {
+                //         return colorScale(d.key)
+                //     })
+
+                // lines.exit().remove()
+
+
+        // Handle exiting elements (see README.md)
+        // countries.exit()
+        //     .transition()
+        //     .duration(1500)
+        //     .attr("stroke-dashoffset", function(d) {
+        //         return -d3.select(this).node().getTotalLength();
+        //     })
+        //     .attr("stroke-dasharray", function(d) {
+        //         var totalLength = d3.select(this).node().getTotalLength();
+        //         return (totalLength + " " + totalLength);
+        //     })
+        //     .remove();
         });
     };
 
