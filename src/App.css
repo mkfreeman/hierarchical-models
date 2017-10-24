@@ -5,7 +5,7 @@
 	padding: 0 !important;
 }
 .element {
-  /* height:1000px; */
+  min-height:700px;
   padding-bottom:250px;
 	/* background-color: #ededed; */
 	/* font-size: 45px; */
@@ -15,7 +15,7 @@
 }
 
 .element:last-of-type {
-  margin-bottom:500px;
+  margin-bottom:700px;
 }
 
 .active {
