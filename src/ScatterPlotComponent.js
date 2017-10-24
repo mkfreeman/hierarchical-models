@@ -22,13 +22,16 @@ class ScatterPlotComponent extends Component {
             .delay(this.props.delay)
             .xTitle(this.props.xTitle)
             .yTitle(this.props.yTitle)
-            .radius(this.props.radius);
+            .radius(this.props.radius)
+            .pack(this.props.settings.pack)
+            .packValue('y')
+            .packGroup('color');
 
-        // Call d3 update
-        console.log('scatterplot props', this.props)
+        // Call d3 update        
         d3.select(this.root)
             .datum({
                 scatter: this.props.data,
+                pack: this.props.data,
                 line: this.props.lineData
             })
             .call(this.scatter);
@@ -60,6 +63,9 @@ ScatterPlotComponent.defaultProps = {
     delay: (d) => 0,
     radius: (d) => d.selected == true ? 6 : 10,
     fill: (d) => 'blue',
+    settings: {
+        pack: false
+    },
     data: [{
         x: 10,
         y: 1000,

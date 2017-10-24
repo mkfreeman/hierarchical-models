@@ -29,7 +29,21 @@ class App extends React.Component {
             dataStep: 0,
             allData: [],
             allLineData: [],
-            colorScales: [d3.scaleOrdinal().range(['black']),
+            scatterSettings: [
+                {
+                    pack: true
+                },
+                {
+                    pack: false
+                },
+                {
+                    pack: false
+                },
+                {
+                    pack: false
+                }
+            ],
+            colorScales: [d3.scaleOrdinal().range(d3.schemeCategory10),
                 d3.scaleOrdinal().range(d3.schemeCategory10),
                 d3.scaleOrdinal().range(d3.schemeCategory10),
                 d3.scaleOrdinal().range(d3.schemeCategory10),
@@ -39,11 +53,11 @@ class App extends React.Component {
 
     componentDidMount() {
         Events.scrollEvent.register('begin', function() {
-            console.log("begin", arguments);
+            // console.log("begin", arguments);
         });
 
         Events.scrollEvent.register('end', function() {
-            console.log("end", arguments);
+            // console.log("end", arguments);
         });
 
         scrollSpy.update();
@@ -77,8 +91,8 @@ class App extends React.Component {
             let randomSlopeIntercept = lineNest.entries(GetLineData('random.slope.int.preds'));
             let simpleModel = lineNest.entries(GetLineData('simple.model'))
             this.setState({
-                allData: [formatted, formatted, formatted],
-                allLineData: [simpleModel, randomSlopes, randomIntercept, randomSlopeIntercept]
+                allData: [formatted, formatted, formatted, formatted],
+                allLineData: [[], [], simpleModel, randomSlopes, randomIntercept, randomSlopeIntercept]
             });
         }.bind(this))
     }
@@ -101,6 +115,7 @@ class App extends React.Component {
         let colorScale = this.state.colorScales[this.state.dataStep];
         let chartData = this.state.allData[this.state.dataStep];
         let lineData = this.state.allLineData[this.state.dataStep];
+        let scatterSettings = this.state.scatterSettings[this.state.dataStep];
         return (
             <div>
               <div className="container">
@@ -126,7 +141,8 @@ class App extends React.Component {
                 </nav>
               </div>
               <div className="container">
-                <ScatterPlotComponent lineData={ lineData } colorScale={ colorScale } data={ chartData } xTitle="Years of Experience" yTitle="Salary" />
+                <ScatterPlotComponent settings={ scatterSettings } lineData={ lineData } colorScale={ colorScale } data={ chartData } xTitle="Years of Experience"
+                  yTitle="Salary" />
                 <Element name="test0" className="element">
                   <Sections sectionNumber={ 0 } />
                 </Element>

@@ -12,7 +12,6 @@ var ScatterPlot = function() {
         yTitle = 'Y Axis Title',
         duration = 1000,
         colorScale = (d) => d.color || 'green',
-        // fill = (d) => colorScale(d),
         radius = (d) => 6,
         margin = {
             left: 70,
@@ -20,7 +19,11 @@ var ScatterPlot = function() {
             top: 0,
             right: 50,
         },
-        delay = (d) => xScale(d.x) * 5
+        delay = (d) => xScale(d.x) * 5,
+        pack = false,
+        packGroup = 'group',
+        packValue = 'y',
+        yFormat = (d) => "$" + d3.format(".2s")(d)
 
     // Function returned by ScatterPlot
     var chart = function(selection) {
@@ -30,7 +33,6 @@ var ScatterPlot = function() {
 
         // Iterate through selections, in case there are multiple
         selection.each(function(data) {
-
             // Use the data-join to create the svg (if necessary)
             var ele = d3.select(this);
             var svg = ele.selectAll("svg").data([data]);
@@ -53,21 +55,25 @@ var ScatterPlot = function() {
             // Append axes to the gEnter element
             gEnter.append('g')
                 .attr('transform', 'translate(' + margin.left + ',' + (chartHeight + margin.top) + ')')
-                .attr('class', 'axis x');
+                .attr('class', pack == true ? 'axis x' : 'axis x')
+                .style('opacity', pack == true ? 0 : 1);
 
             gEnter.append('g')
                 .attr('class', 'axis y')
                 .attr('transform', 'translate(' + margin.left + ',' + (margin.top) + ')')
+                .style('opacity', pack == true ? 0 : 1);
 
             // Add a title g for the x axis
             gEnter.append('text')
                 .attr('transform', 'translate(' + (margin.left + chartWidth / 2) + ',' + (chartHeight + margin.top + 40) + ')')
-                .attr('class', 'title x');
+                .attr('class', 'title x')
+                .style('opacity', pack == true ? 0 : 1);
 
             // Add a title g for the y axis
             gEnter.append('text')
-                .attr('transform', 'translate(' + (margin.left - 40) + ',' + (margin.top + chartHeight / 2) + ') rotate(-90)')
-                .attr('class', 'title y');
+                .attr('transform', 'translate(' + (margin.left - 50) + ',' + (margin.top + chartHeight / 2) + ') rotate(-90)')
+                .attr('class', 'title y')
+                .style('opacity', pack == true ? 0 : 1);
 
             // Define xAxis and yAxis functions
             var xAxis = d3.axisBottom();
@@ -82,10 +88,9 @@ var ScatterPlot = function() {
                 });
 
             ele.select('svg').call(tip);
-
             // Calculate x and y scales
             let xMax = d3.max(data.scatter, (d) => +d.x) * 1.05;
-            let xMin = d3.min(data.scatter, (d) => +d.x) * .95;
+            let xMin = d3.min(data.scatter, (d) => +d.x) * .6;
             xScale.range([0, chartWidth]).domain([xMin, xMax]);
 
             var yMin = d3.min(data.scatter, (d) => +d.y) * .95;
@@ -94,35 +99,90 @@ var ScatterPlot = function() {
 
             // Update axes
             xAxis.scale(xScale);
-            yAxis.scale(yScale);
-            ele.select('.axis.x').transition().duration(1000).call(xAxis);
-            ele.select('.axis.y').transition().duration(1000).call(yAxis);
+            yAxis.scale(yScale).tickFormat(yFormat);
+            ele.select('.axis.x').transition().duration(1000)
+                .style('opacity', pack == true ? 0 : 1)
+                .call(xAxis);
+            ele.select('.axis.y').transition().duration(1000)
+                .style('opacity', pack == true ? 0 : 1)
+                .call(yAxis);
 
             // Update titles
-            ele.select('.title.x').text(xTitle)
-            ele.select('.title.y').text(yTitle)
+            ele.select('.title.x').text(xTitle).transition().duration(duration).style('opacity', pack == true ? 0 : 1)
+            ele.select('.title.y').text(yTitle).transition().duration(duration).style('opacity', pack == true ? 0 : 1)
 
+            // Define data
+            var chartData;
+            if (pack == true) {
+                // Create a packing function to pack circles
+                var packer = d3.pack()
+                    .size([width, width]);
+                // Nest your data *by group* using d3.nest()
+                var nestedData = d3.nest()
+                    .key(function(d) {
+                        return d[packGroup];
+                    })
+                    .entries(data.pack);
+
+                // Define a hierarchy for your data using d3.hierarchy
+                var root = d3.hierarchy({
+                    values: nestedData
+                }, function(d) {
+                    return d.values;
+                }).sum(function(d) {
+                    return +d[packValue];
+                });
+                // (Re)build your pack hierarchy data structure by passing your `root` to your `pack` function
+                packer(root);
+                chartData = root.descendants()
+                    .filter((d) => d.depth != 0).map(function(d) {
+                    console.log(d.data.color)
+                    return {
+                        x: d.x,
+                        y: d.y,
+                        id: d.data.id,
+                        color: d.data.color,
+                        r: d.r,
+                        container: d.depth == 1
+                    }
+                });
+                xMin = d3.min(chartData, (d) => d.x)
+                xMax = d3.max(chartData, (d) => d.x)
+                xScale.domain([xMin, xMax]).range([xMin, xMax])
+                yMin = d3.min(chartData, (d) => d.y)
+                yMax = d3.max(chartData, (d) => d.y)
+                yScale.domain([yMin, yMax]).range([yMin, yMax])
+                radius = (d) => d.r
+            } else {
+                chartData = data.scatter;
+            }
+            console.log('pack ', pack, 'chart data ', chartData)
             // Draw markers
-            console.log('circle data ', data)
-            let circles = ele.select('.chartG').selectAll('circle').data(data.scatter, (d) => d.id);
+            let circles = ele.select('.chartG').selectAll('circle')
+                .data(chartData, function(d) {
+                    return d.id
+                })
             // Use the .enter() method to get entering elements, and assign initial position
             circles.enter().append('circle')
-                // .attr('cy', chartHeight)
                 .style('opacity', .3)
                 .attr('cx', (d) => xScale(d.x))
-                .attr('cy', chartHeight)
+                .attr('cy', (d) => yScale(d.y))
+                .attr('r', 0)
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide)
                 // Transition properties of the + update selections
                 .merge(circles)
-                .attr('r', radius)
                 .transition()
                 .duration(1500)
                 .delay(delay)
-                // .style('fill', fill)
-                .style('fill', (d) => colorScale(d.color))
+                // .style('fill', (d) => colorScale(d.color))
+                .style('fill', function(d) {
+                    return d.container == true ? 'none' : colorScale(d.color)
+                })
+                .style('stroke', (d) => d.container == true ? 'black' : 'none')
                 .attr('cx', (d) => xScale(d.x))
                 .attr('cy', (d) => yScale(d.y))
+                .attr('r', (d) => radius(d));
 
             // Use the .exit() and .remove() methods to remove elements that are no longer in the data
             circles.exit().remove();
@@ -136,7 +196,6 @@ var ScatterPlot = function() {
                     return yScale(+d.y)
                 });
             // let circles = ele.select('.chartG').selectAll('circle').data(data.scatter, (d) => d.id);
-            console.log('line data ', data.line)
             let lines = ele.select('.chartG').selectAll('path').data(data.line, (d) => d.key);
 
             // Handle entering elements (see README.md)
@@ -146,16 +205,6 @@ var ScatterPlot = function() {
                 })
                 .attr("fill", "none")
                 .attr("stroke-width", 1.5)
-                .merge(lines)
-                .transition()
-                .duration(duration)
-                .attr("d", function(d) {
-                    return line(d.values)
-                })
-                .attr("stroke", function(d) {
-                    console.log(d.key, colorScale(d.key))
-                    return colorScale(d.key)
-                })
                 // .attr("stroke-dasharray", function(d) {
                 //     var totalLength = d3.select(this).node().getTotalLength();
                 //     return (totalLength + " " + totalLength);
@@ -163,13 +212,22 @@ var ScatterPlot = function() {
                 // .attr("stroke-dashoffset", function(d) {
                 //     return -d3.select(this).node().getTotalLength();
                 // })
-                // .transition()
-                // .duration(2000)
+                .merge(lines)
+                .transition()
+                .duration(duration)
+                .attr("d", function(d) {
+                    return line(d.values)
+                })
+                .attr("stroke", function(d) {
+                    return colorScale(d.key)
+                })
+                .transition()
+                .duration(2000)
                 // .attr("stroke-dashoffset", function(d) {
                 //     return 0;
                 // });
 
-                // Handle updating elements (see README.md)
+            // Handle updating elements (see README.md)
                 // countries.attr("stroke-dasharray", "none")
                 //     .transition()
                 //     .duration(2000)
@@ -180,7 +238,7 @@ var ScatterPlot = function() {
                 //         return colorScale(d.key)
                 //     })
 
-                // lines.exit().remove()
+            lines.exit().remove()
 
 
         // Handle exiting elements (see README.md)
@@ -231,6 +289,21 @@ var ScatterPlot = function() {
     chart.radius = function(value) {
         if (!arguments.length) return radius;
         radius = value;
+        return chart;
+    }
+    chart.pack = function(value) {
+        if (!arguments.length) return pack;
+        pack = value;
+        return chart;
+    }
+    chart.packValue = function(value) {
+        if (!arguments.length) return packValue;
+        packValue = value;
+        return chart;
+    }
+    chart.packGroup = function(value) {
+        if (!arguments.length) return packGroup;
+        packGroup = value;
         return chart;
     }
     chart.delay = function(value) {
