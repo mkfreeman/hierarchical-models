@@ -1,11 +1,14 @@
 import './App.css';
 import ScatterPlotComponent from './ScatterPlotComponent';
 import * as d3 from 'd3';
+import Sections from './Sections';
 
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Scroll = require('react-scroll');
 
+
+// Scrolling
 var Link = Scroll.Link;
 var DirectLink = Scroll.DirectLink;
 var Element = Scroll.Element;
@@ -98,42 +101,45 @@ class App extends React.Component {
         let colorScale = this.state.colorScales[this.state.dataStep];
         let chartData = this.state.allData[this.state.dataStep];
         let lineData = this.state.allLineData[this.state.dataStep];
-        console.log("line data ", lineData, chartData)
         return (
             <div>
-              <nav className="navbar navbar-default navbar-fixed-top">
-                <div className="container-fluid">
-                  <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul className="nav navbar-nav">
-                      <li>
-                        <Link activeClass="active" onSetActive={ this.handleSetActive.bind(this) } className="test0" to="test0" spy={ true } smooth={ true } duration={ 500 }>Test 0</Link>
-                      </li>
-                      <li>
-                        <Link activeClass="active" onSetActive={ this.handleSetActive.bind(this) } className="test1" to="test1" spy={ true } smooth={ true } duration={ 500 }>Test 1</Link>
-                      </li>
-                      <li>
-                        <Link activeClass="active" onSetActive={ this.handleSetActive.bind(this) } className="test2" to="test2" spy={ true } smooth={ true } duration={ 500 }>Test 2</Link>
-                      </li>
-                      <li>
-                        <Link activeClass="active" onSetActive={ this.handleSetActive.bind(this) } className="test3" to="test3" spy={ true } smooth={ true } duration={ 500 }>Test 3</Link>
-                      </li>
-                    </ul>
+              <div className="container">
+                <nav className="navbar navbar-default navbar-fixed-top">
+                  <div className="container-fluid">
+                    <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                      <ul className="nav navbar-nav">
+                        <li>
+                          <Link activeClass="active" onSetActive={ this.handleSetActive.bind(this) } className="test0" to="test0" spy={ true } smooth={ true } duration={ 500 }>Test 0</Link>
+                        </li>
+                        <li>
+                          <Link activeClass="active" onSetActive={ this.handleSetActive.bind(this) } className="test1" to="test1" spy={ true } smooth={ true } duration={ 500 }>Test 1</Link>
+                        </li>
+                        <li>
+                          <Link activeClass="active" onSetActive={ this.handleSetActive.bind(this) } className="test2" to="test2" spy={ true } smooth={ true } duration={ 500 }>Test 2</Link>
+                        </li>
+                        <li>
+                          <Link activeClass="active" onSetActive={ this.handleSetActive.bind(this) } className="test3" to="test3" spy={ true } smooth={ true } duration={ 500 }>Test 3</Link>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              </nav>
-              <ScatterPlotComponent lineData={ lineData } colorScale={ colorScale } data={ chartData } xTitle="Years of Experience" yTitle="Salary" />
-              <Element name="test0" className="element">
-                test 0
-              </Element>
-              <Element name="test1" className="element">
-                test 1
-              </Element>
-              <Element name="test2" className="element">
-                test 2
-              </Element>
-              <Element name="test3" className="element">
-                test 3
-              </Element>
+                </nav>
+              </div>
+              <div className="container">
+                <ScatterPlotComponent lineData={ lineData } colorScale={ colorScale } data={ chartData } xTitle="Years of Experience" yTitle="Salary" />
+                <Element name="test0" className="element">
+                  <Sections sectionNumber={ 0 } />
+                </Element>
+                <Element name="test1" className="element">
+                  <Sections sectionNumber={ 1 } />
+                </Element>
+                <Element name="test2" className="element">
+                  <Sections sectionNumber={ 2 } />
+                </Element>
+                <Element name="test3" className="element">
+                  test 3
+                </Element>
+              </div>
             </div>
             );
     }

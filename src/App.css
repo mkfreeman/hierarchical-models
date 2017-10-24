@@ -1,4 +1,5 @@
 @import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css");
+@import url("//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css");
 .body {
 	margin: 0 !important;
 	padding: 0 !important;
