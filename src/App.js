@@ -2,7 +2,14 @@ import './App.css';
 import ScatterPlotComponent from './ScatterPlotComponent';
 import * as d3 from 'd3';
 import Sections from './Sections';
+var ReactGA = require('react-ga');
 
+function logPageView() {
+    ReactGA.set({
+        page: window.location.pathname + window.location.search
+    });
+    ReactGA.pageview(window.location.pathname + window.location.search);
+}
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Scroll = require('react-scroll');
@@ -51,7 +58,7 @@ class App extends React.Component {
             colorScales: [
                 d3
                     .scaleOrdinal()
-                    .range('black'),
+                    .range(d3.schemeCategory10),
                 d3
                     .scaleOrdinal()
                     .range(d3.schemeCategory10),
@@ -72,6 +79,9 @@ class App extends React.Component {
     }
 
     componentDidMount() {
+        // Google analytics
+        ReactGA.initialize('UA-49431863-5');
+        logPageView();
         Events
             .scrollEvent
             .register('begin', function() {
@@ -266,6 +276,14 @@ class App extends React.Component {
                   <Sections sectionNumber={ 5 } />
                 </Element>
               </div>
+              <footer>
+                <div class="footer-copyright">
+                  <div class="container">
+                    © 2017 Copyright <a href="http://mfviz.com/" target="_blank">Michael Freeman</a>
+                    <a class="right" target="_blank" href="http://twitter.com/mf_viz">@mf_viz</a>
+                  </div>
+                </div>
+              </footer>
             </div>
             );
     }

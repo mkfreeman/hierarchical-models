@@ -5,7 +5,7 @@ import d3tip from 'd3-tip';
 var ScatterPlot = function() {
     // Set default values
     var height = 500,
-        width = 500,
+        width = window.innerWidth * .7,
         xScale = d3.scaleLinear(),
         yScale = d3.scaleLinear(),
         xTitle = 'X Axis Title',
@@ -127,6 +127,7 @@ var ScatterPlot = function() {
             ele
                 .select('.axis.x')
                 .transition()
+                .delay(hideAxes != true ? duration : 0)
                 .duration(1000)
                 .style('opacity', hideAxes == true
                     ? 0
@@ -136,6 +137,7 @@ var ScatterPlot = function() {
                 .select('.axis.y')
                 .transition()
                 .duration(1000)
+                .delay(hideAxes != true ? duration : 0)
                 .style('opacity', hideAxes == true
                     ? 0
                     : 1)
@@ -146,6 +148,7 @@ var ScatterPlot = function() {
                 .select('.title.x')
                 .text(xTitle)
                 .transition()
+                .delay(hideAxes != true ? duration : 0)
                 .duration(duration)
                 .style('opacity', hideAxes == true
                     ? 0
@@ -154,6 +157,7 @@ var ScatterPlot = function() {
                 .select('.title.y')
                 .text(yTitle)
                 .transition()
+                .delay(hideAxes != true ? duration : 0)
                 .duration(duration)
                 .style('opacity', hideAxes == true
                     ? 0
@@ -163,9 +167,10 @@ var ScatterPlot = function() {
             var chartData;
             if (pack == true) {
                 // Create a packing function to pack circles
+                let size = d3.min([width, height]);
                 var packer = d3
                     .pack()
-                    .size([width, width]);
+                    .size([size, size]);
                 // Nest your data *by group* using d3.nest()
                 var nestedData = d3
                     .nest()
@@ -277,7 +282,17 @@ var ScatterPlot = function() {
                     return colorScale(d.key)
                 })
                 .attr("stroke-width", 1.5)
-                .merge(lines)
+                .transition()
+                .delay(duration)
+                .duration(duration)
+                .attr('x1', function(d) {
+                    return xScale(d.values[0].x)
+                })
+                .attr('y1', (d) => yScale(d.values[0].y))
+                .attr('x2', (d) => xScale(d.values[1].x))
+                .attr('y2', (d) => yScale(d.values[1].y))
+
+            lines
                 .transition()
                 .duration(duration)
                 .attr('x1', function(d) {
