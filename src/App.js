@@ -82,6 +82,9 @@ class App extends React.Component {
         // Google analytics
         ReactGA.initialize('UA-49431863-5');
         logPageView();
+
+        // Page title
+        document.title = "Hierachical Models";
         Events
             .scrollEvent
             .register('begin', function() {

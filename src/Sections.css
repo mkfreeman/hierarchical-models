@@ -1,9 +1,10 @@
 /* Sections css */
-.Sections {
-    width:30%;
-}
-.no-bullets {
-    list-style-type:none;
-    margin-left:5px;
 
+.Sections {
+    width: 25%;
+}
+
+.no-bullets {
+    list-style-type: none;
+    margin-left: 5px;
 }
