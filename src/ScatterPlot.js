@@ -108,7 +108,7 @@ var ScatterPlot = function() {
                 .call(tip);
             // Calculate x and y scales
             let xMax = d3.max(data.scatter, (d) => +d.x) * 1.05;
-            let xMin = d3.min(data.scatter, (d) => +d.x) * .6;
+            let xMin = d3.min(data.scatter, (d) => +d.x) - xMax / 15;
             xScale
                 .range([0, chartWidth])
                 .domain([xMin, xMax]);
