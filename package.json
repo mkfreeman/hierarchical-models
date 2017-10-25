@@ -5,6 +5,7 @@
     "devDependencies": {
         "react-scripts": "1.0.14"
     },
+    "homepage": "http://mfviz.com/hierarchical-models",
     "dependencies": {
         "d3": "^4.11.0",
         "d3-tip": "^0.7.1",
