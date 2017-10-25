@@ -1,23 +1,30 @@
 @import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css");
 @import url("//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css");
-.body {
-	margin: 0 !important;
-	padding: 0 !important;
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif
 }
+
 .element {
-  min-height:700px;
-  padding-bottom:250px;
-	/* background-color: #ededed; */
-	/* font-size: 45px; */
-	/* border-top:1px solid #000; */
-	padding-top:55px;
-	padding-left:10px;
+    min-height: 700px;
+    padding-bottom: 250px;
+    /* background-color: #ededed; */
+    /* font-size: 45px; */
+    /* border-top:1px solid #000; */
+    padding-top: 55px;
+    padding-left: 10px;
 }
 
 .element:last-of-type {
-  margin-bottom:700px;
+    margin-bottom: 700px;
 }
 
 .active {
-	color:red !important;
+    color: red !important;
+}
+
+h1 {
+    font-weight: 300;
+    padding-top: 40px;
 }

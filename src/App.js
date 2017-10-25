@@ -15,7 +15,7 @@ var Events = Scroll.Events;
 var scroll = Scroll.animateScroll;
 var scrollSpy = Scroll.scrollSpy;
 
-var durationFn = function (deltaTop) {
+var durationFn = function(deltaTop) {
     return deltaTop;
 };
 
@@ -74,23 +74,28 @@ class App extends React.Component {
     componentDidMount() {
         Events
             .scrollEvent
-            .register('begin', function () {
+            .register('begin', function() {
                 // console.log("begin", arguments);
             });
 
         Events
             .scrollEvent
-            .register('end', function () {
+            .register('end', function() {
                 // console.log("end", arguments);
             });
 
         scrollSpy.update();
-        d3.csv('data/faculty-data.csv', function (error, data) {
+        d3.csv('data/faculty-data.csv', function(error, data) {
             // let formatted = data.map((d) => {{id:d.id, x:d.experience, y:d.salary})
-            let formatted = data.map(function (d) {
-                return {id: d.ids, x: d.experience, y: d.salary, color: d.department}
+            let formatted = data.map(function(d) {
+                return {
+                    id: d.ids,
+                    x: d.experience,
+                    y: d.salary,
+                    color: d.department
+                }
             })
-            let random = data.map(function (d) {
+            let random = data.map(function(d) {
                 return {
                     id: d.ids,
                     x: Math.random(),
@@ -100,10 +105,10 @@ class App extends React.Component {
             });
 
             // Function to grab column of interest
-            let GetLineData = function (col) {
-                let allData = data.map(function (d) {
+            let GetLineData = function(col) {
+                let allData = data.map(function(d) {
                     return {
-                        x: + d.experience,
+                        x: +d.experience,
                         y: d[col],
                         color: d.department
                     }
@@ -117,13 +122,13 @@ class App extends React.Component {
                 // New function to get line data
                 let nested = lineNest.entries(allData);
 
-                nested.map(function (d) {
-                    let xMin = d3.min(d.values, (d) => + d.x)
-                    let xMax = d3.max(d.values, (d) => + d.x)
+                nested.map(function(d) {
+                    let xMin = d3.min(d.values, (d) => +d.x)
+                    let xMax = d3.max(d.values, (d) => +d.x)
                     let ret = d
                         .values
                         .filter((d) => d.x == xMax | d.x == xMin)
-                        .sort(function (a, b) {
+                        .sort(function(a, b) {
                             return a.x - b.x
                         })
                     d.values = [
@@ -140,14 +145,14 @@ class App extends React.Component {
             let simpleModel = GetLineData('simple.model');
             this.setState({
                 allData: [
-                    random, formatted, formatted, formatted, formatted
+                    random, formatted, formatted, formatted, formatted, formatted
                 ],
                 allLineData: [
                     [],
                     [],
                     simpleModel,
-                    randomSlopes,
                     randomIntercept,
+                    randomSlopes,
                     randomSlopeIntercept
                 ]
             });
@@ -165,11 +170,31 @@ class App extends React.Component {
             .remove('end');
     }
     handleSetActive(to) {
+        let dataStep = 0;
+        switch (to) {
+            case( 'intro'):
+                dataStep = 0
+                break;
+            case( 'nested-data'):
+                dataStep = 1
+                break;
+            case( 'linear'):
+                dataStep = 2
+                break;
+            case( 'random-intercept'):
+                dataStep = 3
+                break;
+            case( 'random-slope'):
+                dataStep = 4
+                break;
+            case ( 'random-slope-intercept'):
+                dataStep = 5;
+                break;
+        }
         this.setState({
-            dataStep: Number(to.replace('test', ''))
+            dataStep: dataStep
         })
     }
-    // formatData() { }
     render() {
         let colorScale = this.state.colorScales[this.state.dataStep];
         let chartData = this.state.allData[this.state.dataStep];
@@ -177,88 +202,74 @@ class App extends React.Component {
         let scatterSettings = this.state.scatterSettings[this.state.dataStep];
         return (
             <div>
-                <div className="container">
-                    <nav className="navbar navbar-default navbar-fixed-top">
-                        <div className="container-fluid">
-                            <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                                <ul className="nav navbar-nav">
-                                    <li>
-                                        <Link
-                                            activeClass="active"
-                                            onSetActive={this
-                                            .handleSetActive
-                                            .bind(this)}
-                                            className="test0"
-                                            to="test0"
-                                            spy={true}
-                                            smooth={true}
-                                            duration={500}>Test 0</Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            activeClass="active"
-                                            onSetActive={this
-                                            .handleSetActive
-                                            .bind(this)}
-                                            className="test1"
-                                            to="test1"
-                                            spy={true}
-                                            smooth={true}
-                                            duration={500}>Test 1</Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            activeClass="active"
-                                            onSetActive={this
-                                            .handleSetActive
-                                            .bind(this)}
-                                            className="test2"
-                                            to="test2"
-                                            spy={true}
-                                            smooth={true}
-                                            duration={500}>Test 2</Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            activeClass="active"
-                                            onSetActive={this
-                                            .handleSetActive
-                                            .bind(this)}
-                                            className="test3"
-                                            to="test3"
-                                            spy={true}
-                                            smooth={true}
-                                            duration={500}>Test 3</Link>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-                <div className="container">
-                    <ScatterPlotComponent
-                        settings={scatterSettings}
-                        lineData={lineData}
-                        colorScale={colorScale}
-                        data={chartData}
-                        xTitle="Years of Experience"
-                        yTitle="Salary"/>
-                    <Element name="test0" className="element">
-                        <Sections sectionNumber={0}/>
-                    </Element>
-                    <Element name="test1" className="element">
-                        <Sections sectionNumber={1}/>
-                    </Element>
-                    <Element name="test2" className="element">
-                        <Sections sectionNumber={2}/>
-                    </Element>
-                    <Element name="test3" className="element">
-                        test 3
-                    </Element>
-                </div>
+              <div className="container">
+                <nav className="navbar navbar-default navbar-fixed-top">
+                  <div className="container">
+                    <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                      <ul className="nav navbar-nav">
+                        <li>
+                          <Link activeClass="active" onSetActive={ this
+                                                                       .handleSetActive
+                                                                       .bind(this) } className="Intro" to="Intro" spy={ true } smooth={ true } duration={ 500 }>Intro</Link>
+                        </li>
+                        <li>
+                          <Link activeClass="active" onSetActive={ this
+                                                                       .handleSetActive
+                                                                       .bind(this) } className="nested-data" to="nested-data" spy={ true } smooth={ true } duration={ 500 }>Nested Data</Link>
+                        </li>
+                        <li>
+                          <Link activeClass="active" onSetActive={ this
+                                                                       .handleSetActive
+                                                                       .bind(this) } className="linear" to="linear" spy={ true } smooth={ true } duration={ 500 }>Linear</Link>
+                        </li>
+                        <li>
+                          <Link activeClass="active" onSetActive={ this
+                                                                       .handleSetActive
+                                                                       .bind(this) } className="random-intercept" to="random-intercept" spy={ true } smooth={ true }
+                            duration={ 500 }>Random Intercept</Link>
+                        </li>
+                        <li>
+                          <Link activeClass="active" onSetActive={ this
+                                                                       .handleSetActive
+                                                                       .bind(this) } className="random-slope" to="random-slope" spy={ true } smooth={ true } duration={ 500 }>Random Slope</Link>
+                        </li>
+                        <li>
+                          <Link activeClass="active" onSetActive={ this
+                                                                       .handleSetActive
+                                                                       .bind(this) } className="random-slope-intercept" to="random-slope-intercept" spy={ true } smooth={ true }
+                            duration={ 500 }>Random Slope + Intercept</Link>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </nav>
+              </div>
+              <div className="container">
+                <ScatterPlotComponent settings={ scatterSettings } lineData={ lineData } colorScale={ colorScale } data={ chartData } xTitle="Years of Experience"
+                  yTitle="Salary" />
+                <Element name="Intro" className="element">
+                  <Sections sectionNumber={ 0 } />
+                </Element>
+                <Element name="nested-data" className="element">
+                  <Sections sectionNumber={ 1 } />
+                </Element>
+                <Element name="linear" className="element">
+                  <Sections sectionNumber={ 2 } />
+                </Element>
+                <Element name="random-intercept" className="element">
+                  <Sections sectionNumber={ 3 } />
+                </Element>
+                <Element name="random-slope" className="element">
+                  <Sections sectionNumber={ 4 } />
+                </Element>
+                <Element name="random-slope-intercept" className="element">
+                  <Sections sectionNumber={ 5 } />
+                </Element>
+              </div>
             </div>
-        );
+            );
     }
-};
+}
+;
 
 export default App;

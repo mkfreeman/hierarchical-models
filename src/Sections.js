@@ -1,9 +1,9 @@
 // Sections
 import React, { Component } from 'react';
-import { Tex } from 'react-tex';
+import { Tex, InlineTex } from 'react-tex';
 import './Sections.css';
 var ReactMarkdown = require('react-markdown');
-// var Latex = require('react-latex');
+
 
 // Written Sections
 class Sections extends Component {
@@ -17,28 +17,82 @@ class Sections extends Component {
 
         switch (this.props.sectionNumber) {
             case 0:
-                var ele = <ReactMarkdown source={ "# Nested Data \nIn this module, you'll be familiarized with **multi-level models** as an approach for modeling _nested data_. You'll frequently encounter nested data structures, for example: \n\- Predicting **student** college admissions, where students are drawn from different _high schools_ \n\- Modeling **patient** health outcomes, where patients are drawn from different _hospitals_ \n\- Estimating **faculty** salaries, where the faculty are drawm from different _departments_ \n\n\In each example above the **observations** (**students**, **patients**, **faculty**) belong to different _groups_ (_schools_, _hospitals_, _departments_). These data can be described as **nested** because each observation comes from within a group (and we believe these groups to be related to the outcome). As you can imagine, there could be some effect at the _group level_, as well as the individual level. For example, a student's college acceptance may depend on _individual predictors_, such as their GPA, number of volunteer activities, and other factors. However, their admissions status may also depend on which _school_ they belong to, based on the reputation of that school, financial aid, or other factors. In this module, we'll explore various (introductory) ways to handle nested data." } />
+                var ele = <div>
+                            <h1>An Introduction to Hierarchical Modeling</h1>
+                            <p>This visual explanation introduces the statistical concept of <strong>Hierarchical Modeling</strong>, also known as <em>Multilevel Modeling</em> or by
+                              <a href="https://en.wikipedia.org/wiki/Multilevel_model" target="_blank"> these other terms</a>. This is an approach for modeling <strong>nested data</strong>.
+                              Scroll down to learn about <em>why</em> you would use this analytical approach.</p>
+                          </div>
                 break;
             case 1:
                 var ele = <div>
-                            <ReactMarkdown source={ "## Vocabulary\n\There are a variety of different terms that statisticians use to refer to modeling nested data. Confusingly, _many terms_ may refer to the _same procedure_, and many people may use the _same term_ to refer to _different procedures_. The vocabulary introduced here largely comes from this [cannonical text](https://www.amazon.com/Analysis-Regression-Multilevel-Hierarchical-Models/dp/052168689X). \n\n\ #### _Multi-level models_ \n\n\ This term refers to modeling strategies for working with nested data. Using one of many possible approaches, these appropriately handle the fact that variables may exist at multiple levels (i.e., a dataset may describe _individuals_ as well as the _cities_ they come from). These are also often referred to as **hierarchical models**, because the data exist in a hierarchical structure (i.e., people within cities)\n\n #### _Fixed effects_ \n\n One component of a multi-level model is the set of _fixed effects_ that are estimated. These, in short, are the betas (coefficients) you are familiar with estimating (i.e., each beta value in this formula): " } />
-                            <ul className="no-bullets">
-                              <li>
-                                <Tex texContent="\hat{y} = \beta_0 + \beta_1x_1 + ... + \beta_nx_n"></Tex>
-                              </li>
-                            </ul>
-                            <ReactMarkdown source={ "These effects are considered _fixed_ because they are _constant_ across individuals (observations) in the dataset, and are commonly estimated through least-squares(or, more genearlly, maximum liklihood methods). While [this text](https://www.amazon.com/Analysis-Regression-Multilevel-Hierarchical-Models/dp/052168689X) prefers to refer to these as **constant slopes** (and intentionally avoids the term _fixed effects_), you will encounter it commonly in other literature.\n\n\ #### _Random effects_ \n\n This an an umbrella term referred to ways in which you can incorporate information about _group level variation_ in your model (i.e., variation across the _cities_ that _individuals_ live within). Broadly speaking, one may expect the variation across groups to vary _randomly_, and multi-level models allow you to incorporate that information in various ways. In the section below, we'll describe the ways in which this variation can be built into your model" } />
+                            <h1>Nested Data</h1>
+                            <p>You’ll frequently encounter nested data structures when doing analytical work. These are instances in which each observation is a member of a group, and you believe
+                              that group membership has an important effect on your outcome of interest. As we walk through this explanation, we'll consider this example</p>
+                            <blockquote>Estimating faculty salaries, where the faculty are drawn from different <em>departments</em>. </blockquote>
+                            <p>As you could imagine, the group (<em>department</em>) that a faculty member belongs to could determine their salary in different ways.
+                            </p>
                           </div>
                 break;
             case 2:
                 var ele = <div>
-                            <ReactMarkdown source={ "### Varying Intercept \n\nOne type of **random effect** is to allow each group to determine the _intercept_ for each observation. Using faculty salary data as an example, it may be the case that each _department_ has a different baseline salary for each faculty member, but the averge increase in salary for each year of experience is consistent across the _University_. This could be written as a _mixed effects_ model as follows:" } />
-                            <Tex texContent="y_i = \alpha_{j[i]} + \beta x_i" />
-                            <div>
-                              <p>In the above formula, the vector of <strong>fixed effects</strong> (constant slopes) is represented by the term <span>&beta</span>. The <strong>random intercept</strong>,
-                                for individual <span>(i)</span> group <span>(j)</span> is denoted as . Applying this to the simulated faculty dataset (from <code>faculty-data.R</code>), the
-                                formula be written as:</p>
-                            </div>
+                            <h1>A Linear Approach</h1>
+                            <p>Let's imagine that you're trying to estimate faculty salary based on the number of years of experience that they have. A simple (linear) model could be used to
+                              estimate this relationship:
+                            </p>
+                            <Tex texContent="\hat{y} = \beta_0 + \beta_1x_1 + ... + \beta_nx_n" />
+                            <p>In the above equation, you would estimate the parameters (beta values) for your variables of interest. These are knows as the <strong>fixed effects</strong> because
+                              they are constant (<em>fixed</em>) for each individual. In our case, we would simply use years of experience to predict salary:</p>
+                            <Tex texContent="salary_i = \beta_0 + \beta_1 * experience_i" />
+                            <p>
+                              However, it's clear that there's variation in salary <strong>by department</strong>. The methods introduced below allow us to capture that information in different
+                              ways.
+                            </p>
+                          </div>
+                break;
+            case 3:
+                var ele = <div>
+                            <h1>Random Intercepts</h1>
+                            <p>It may be the case that each <strong>department</strong> has a different starting salary for their faculty members, and the annual salary increase is consistent
+                              across the university. If we believe this to be the case, we would want to allow the <strong>intercept to vary</strong> <em>by group</em>. We could describe
+                              a <strong>mixed effects</strong> model that allows intercepts to vary by group:
+                            </p>
+                            <Tex texContent="\hat{y_i} = \alpha_{j[i]} + \beta x_i" />
+                            <p>In the above equation, the vector of <strong>fixed effects</strong> (constant slopes) is represented by the
+                              <em> β</em> character, while the set of <strong>random intercepts</strong> is captured by the α. So, individual <code>i</code> in department <code>j</code> would
+                              have the following salary: </p>
+                            <Tex texContent="salary_i = department_{j[i]} + \beta_1 * experience_i" />
+                            <p>This strategy allows us to capture variation in the starting salary of our faculty. However, there may be addition information we want to incorporate into our
+                              model
+                            </p>
+                          </div>
+                break;
+            case 4:
+                var ele = <div>
+                            <h1>Random Slopes</h1>
+                            <p>Alternatively, we could imagine that faculty salaries increase at <strong>different rates</strong> depending on the department. We could incorporate this idea
+                              into a statistical model by allowing the <strong>slope</strong> to vary rather than the intercept. We could formalize this with the following notation:</p>
+                            <Tex texContent="\hat{y_i} = \beta_0 + \beta_{j[i]}x_i" />
+                            <p>Here, the intercept (<em>β<sub>0</sub></em>) is constant(fixed) for all individuals, but the slope (<em>β<sub>j</sub></em> varies depending on the department (<code>j</code>)
+                              of individual <code>i.</code>So, individual <code>i</code> in department <code>j</code> would have the following salary: </p>
+                            <Tex texContent="\hat{salary_i} = \beta_0 + \beta_{1j[i]} * experience_i" />
+                            <p>While This strategy allows us to capture variation in the <em>change in salary</em>, it is clearly a poor fit for the data. We can, however, combine these strategies
+                              for a better fitting model.
+                            </p>
+                          </div>
+                break;
+            case 5:
+                var ele = <div>
+                            <h1>Random Slopes + Intercepts</h1>
+                            <p>It's reasonable to image that the most realistic situation is a combination of the scenarios described above:</p>
+                            <blockquote>Faculty salaries start at different levels <em>and</em> increase at different rates depending on their department.
+                            </blockquote>
+                            <p>To incorporate both of these realities into our model, we want both the slope and the intercept to vary depending on the department of the faculty member. We can
+                              describe this with the following notation:</p>
+                            <Tex texContent="\hat{y_i} = \alpha_{j[i]} + \beta_{j[i]}x_i" />
+                            <p>Thus, the <em>starting salary</em> for faculty member <code>i</code> depends on their department (<em>α<sub>j[i]</sub></em>), and their annual raise also varies
+                              by department (<em>β<sub>j[i]</sub></em>)
+                            </p>
                           </div>
                 break;
             default:
