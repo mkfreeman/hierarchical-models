@@ -7,10 +7,13 @@ body {
 }
 
 .element {
-    min-height: 700px;
-    padding-bottom: 250px;
+    height: 100vh;
     padding-top: 55px;
     padding-left: 10px;
+}
+
+.element[name='about'] {
+    margin-bottom:5vh;
 }
 
 .active {
@@ -64,7 +67,6 @@ nav li {
     opacity: .3;
     position: fixed;
     bottom: 40px;
-    /* left: 100px; */
     cursor: pointer;
 }
 
