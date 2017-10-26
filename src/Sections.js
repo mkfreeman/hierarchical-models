@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Tex, InlineTex } from 'react-tex';
 import './Sections.css';
+var FontAwesome = require('react-fontawesome');
 var ReactMarkdown = require('react-markdown');
 
 
@@ -22,6 +23,9 @@ class Sections extends Component {
                             <p>This visual explanation introduces the statistical concept of <strong>Hierarchical Modeling</strong>, also known as <em>Multilevel Modeling</em> or by
                               <a href="https://en.wikipedia.org/wiki/Multilevel_model" target="_blank"> these other terms</a>. This is an approach for modeling <strong>nested data</strong>.
                               Scroll down to learn about <em>why</em> you would use this analytical approach.</p>
+                            <div id="scroll-wrapper">
+                              <FontAwesome id="scroll-down" name="chevron-down" size="3x" onClick={ this.props.clickEvent } />
+                            </div>
                           </div>
                 break;
             case 1:

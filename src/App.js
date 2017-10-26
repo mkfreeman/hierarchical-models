@@ -14,17 +14,23 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Scroll = require('react-scroll');
 
-// Scrolling
+// Scrolling variables
 var Link = Scroll.Link;
 var DirectLink = Scroll.DirectLink;
 var Element = Scroll.Element;
 var Events = Scroll.Events;
 var scroll = Scroll.animateScroll;
 var scrollSpy = Scroll.scrollSpy;
+var scroller = Scroll.scroller;
 
 var durationFn = function(deltaTop) {
     return deltaTop;
 };
+
+// List of elements
+const elementList = [
+    'intro', 'nested-data', 'linear', 'random-intercept', 'random-slope', 'random-slope-intercept'
+];
 
 class App extends React.Component {
 
@@ -213,6 +219,13 @@ class App extends React.Component {
         let chartData = this.state.allData[this.state.dataStep];
         let lineData = this.state.allLineData[this.state.dataStep];
         let scatterSettings = this.state.scatterSettings[this.state.dataStep];
+
+        let scrollNext = () => scroller.scrollTo(elementList[this.state.dataStep + 1], {
+            duration: 1500,
+            delay: 100,
+            smooth: true,
+            offset: 50
+        })
         return (
             <div>
               <div className="container">
@@ -223,7 +236,7 @@ class App extends React.Component {
                         <li>
                           <Link activeClass="active" onSetActive={ this
                                                                        .handleSetActive
-                                                                       .bind(this) } className="Intro" to="Intro" spy={ true } smooth={ true } duration={ 500 }>Intro</Link>
+                                                                       .bind(this) } className="intro" to="intro" spy={ true } smooth={ true } duration={ 500 }>Intro</Link>
                         </li>
                         <li>
                           <Link activeClass="active" onSetActive={ this
@@ -260,8 +273,8 @@ class App extends React.Component {
               <div className="container">
                 <ScatterPlotComponent settings={ scatterSettings } lineData={ lineData } colorScale={ colorScale } data={ chartData } xTitle="Years of Experience"
                   yTitle="Salary" />
-                <Element name="Intro" className="element">
-                  <Sections sectionNumber={ 0 } />
+                <Element name="intro" className="element">
+                  <Sections clickEvent={ () => scrollNext() } sectionNumber={ 0 } />
                 </Element>
                 <Element name="nested-data" className="element">
                   <Sections sectionNumber={ 1 } />

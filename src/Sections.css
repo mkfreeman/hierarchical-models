@@ -1,5 +1,6 @@
 /* Sections css */
 
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 .Sections {
     width: 25%;
 }
@@ -7,4 +8,17 @@
 .no-bullets {
     list-style-type: none;
     margin-left: 5px;
+}
+
+#scroll-down {
+    color: black;
+    opacity: .3;
+    position: fixed;
+    bottom: 40px;
+    /* left: 100px; */
+    cursor: pointer;
+}
+
+#scroll-wrapper {
+    margin-left: 35%;
 }
