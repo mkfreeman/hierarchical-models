@@ -13,10 +13,6 @@ body {
     padding-left: 10px;
 }
 
-.element:last-of-type {
-    /* margin-bottom: 300px; */
-}
-
 .active {
     color: red !important;
 }
@@ -61,4 +57,17 @@ nav li {
 
 .eq-wrapper {
     text-align: center;
+}
+
+#scroll-down {
+    color: black;
+    opacity: .3;
+    position: fixed;
+    bottom: 40px;
+    /* left: 100px; */
+    cursor: pointer;
+}
+
+#scroll-wrapper {
+    margin-left: calc(25%/2 - 15px);
 }

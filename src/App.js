@@ -3,7 +3,7 @@ import ScatterPlotComponent from './ScatterPlotComponent';
 import * as d3 from 'd3';
 import Sections from './Sections';
 var ReactGA = require('react-ga');
-
+var FontAwesome = require('react-fontawesome');
 function logPageView() {
     ReactGA.set({
         page: window.location.pathname + window.location.search
@@ -29,7 +29,28 @@ var durationFn = function(deltaTop) {
 
 // List of elements
 const elementList = [
-    'intro', 'nested-data', 'linear', 'random-intercept', 'random-slope', 'random-slope-intercept'
+    {
+        id: 'intro',
+        name: "Introduction"
+    }, {
+        id: 'nested-data',
+        name: "Nested Data"
+    }, {
+        id: 'linear',
+        name: "Linear Model"
+    }, {
+        id: 'random-intercept',
+        name: "Random Intercept"
+    }, {
+        id: 'random-slope',
+        name: "Random Slope"
+    }, {
+        id: 'random-slope-intercept',
+        name: "Random Slope + Intercept"
+    }, {
+        id: 'about',
+        name: "About"
+    }
 ];
 
 class App extends React.Component {
@@ -59,9 +80,18 @@ class App extends React.Component {
                 }, {
                     pack: false,
                     hideAxes: false
-                }
+                }, {
+                    pack: false,
+                    hideAxes: false
+                }, {
+                    pack: false,
+                    hideAxes: true
+                },
             ],
             colorScales: [
+                d3
+                    .scaleOrdinal()
+                    .range(d3.schemeCategory10),
                 d3
                     .scaleOrdinal()
                     .range(d3.schemeCategory10),
@@ -164,7 +194,7 @@ class App extends React.Component {
             let simpleModel = GetLineData('simple.model');
             this.setState({
                 allData: [
-                    random, formatted, formatted, formatted, formatted, formatted
+                    random, formatted, formatted, formatted, formatted, formatted, random
                 ],
                 allLineData: [
                     [],
@@ -209,6 +239,9 @@ class App extends React.Component {
             case ( 'random-slope-intercept'):
                 dataStep = 5;
                 break;
+            case ( 'about'):
+                dataStep = 6;
+                break;
         }
         this.setState({
             dataStep: dataStep
@@ -219,13 +252,14 @@ class App extends React.Component {
         let chartData = this.state.allData[this.state.dataStep];
         let lineData = this.state.allLineData[this.state.dataStep];
         let scatterSettings = this.state.scatterSettings[this.state.dataStep];
-
-        let scrollNext = () => scroller.scrollTo(elementList[this.state.dataStep + 1], {
+        let nextIndex = this.state.dataStep == elementList.length - 1 ? 0 : this.state.dataStep + 1
+        let scrollNext = () => scroller.scrollTo(elementList[nextIndex].id, {
             duration: 1500,
             delay: 100,
             smooth: true,
-            offset: 50
+            offset: nextIndex == 0 ? 0 : 50
         })
+        let icon = nextIndex == 0 ? "chevron-up" : "chevron-down"
         return (
             <div>
               <div className="container">
@@ -233,38 +267,17 @@ class App extends React.Component {
                   <div className="container">
                     <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                       <ul className="nav navbar-nav">
-                        <li>
-                          <Link activeClass="active" onSetActive={ this
-                                                                       .handleSetActive
-                                                                       .bind(this) } className="intro" to="intro" spy={ true } smooth={ true } duration={ 500 }>Intro</Link>
-                        </li>
-                        <li>
-                          <Link activeClass="active" onSetActive={ this
-                                                                       .handleSetActive
-                                                                       .bind(this) } className="nested-data" to="nested-data" spy={ true } smooth={ true } duration={ 500 }>Nested Data</Link>
-                        </li>
-                        <li>
-                          <Link activeClass="active" onSetActive={ this
-                                                                       .handleSetActive
-                                                                       .bind(this) } className="linear" to="linear" spy={ true } smooth={ true } duration={ 500 }>Linear</Link>
-                        </li>
-                        <li>
-                          <Link activeClass="active" onSetActive={ this
-                                                                       .handleSetActive
-                                                                       .bind(this) } className="random-intercept" to="random-intercept" spy={ true } smooth={ true }
-                            duration={ 500 }>Random Intercept</Link>
-                        </li>
-                        <li>
-                          <Link activeClass="active" onSetActive={ this
-                                                                       .handleSetActive
-                                                                       .bind(this) } className="random-slope" to="random-slope" spy={ true } smooth={ true } duration={ 500 }>Random Slope</Link>
-                        </li>
-                        <li>
-                          <Link activeClass="active" onSetActive={ this
-                                                                       .handleSetActive
-                                                                       .bind(this) } className="random-slope-intercept" to="random-slope-intercept" spy={ true } smooth={ true }
-                            duration={ 500 }>Random Slope + Intercept</Link>
-                        </li>
+                        { elementList.map(function(d) {
+                              let offset = d.id == "intro" ? 0 : 50;
+                              return <li>
+                                       <Link activeClass="active" onSetActive={ this
+                                                                                    .handleSetActive
+                                                                                    .bind(this) } className={ d.id } offset={ offset } to={ d.id } spy={ true }
+                                         smooth={ true } duration={ 500 }>
+                                       { d.name }
+                                       </Link>
+                                     </li>
+                          }.bind(this)) }
                       </ul>
                     </div>
                   </div>
@@ -273,24 +286,14 @@ class App extends React.Component {
               <div className="container">
                 <ScatterPlotComponent settings={ scatterSettings } lineData={ lineData } colorScale={ colorScale } data={ chartData } xTitle="Years of Experience"
                   yTitle="Salary" />
-                <Element name="intro" className="element">
-                  <Sections clickEvent={ () => scrollNext() } sectionNumber={ 0 } />
-                </Element>
-                <Element name="nested-data" className="element">
-                  <Sections sectionNumber={ 1 } />
-                </Element>
-                <Element name="linear" className="element">
-                  <Sections sectionNumber={ 2 } />
-                </Element>
-                <Element name="random-intercept" className="element">
-                  <Sections sectionNumber={ 3 } />
-                </Element>
-                <Element name="random-slope" className="element">
-                  <Sections sectionNumber={ 4 } />
-                </Element>
-                <Element name="random-slope-intercept" className="element">
-                  <Sections sectionNumber={ 5 } />
-                </Element>
+                { elementList.map(function(d, i) {
+                      return <Element name={ d.id } className="element">
+                               <Sections sectionNumber={ i } />
+                             </Element>
+                  }.bind(this)) }
+                <div id="scroll-wrapper">
+                  <FontAwesome id="scroll-down" name={ icon } size="3x" onClick={ scrollNext } />
+                </div>
               </div>
               <footer>
                 <div class="footer-copyright">

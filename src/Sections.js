@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Tex, InlineTex } from 'react-tex';
 import './Sections.css';
-var FontAwesome = require('react-fontawesome');
 var ReactMarkdown = require('react-markdown');
 
 
@@ -23,9 +22,6 @@ class Sections extends Component {
                             <p>This visual explanation introduces the statistical concept of <strong>Hierarchical Modeling</strong>, also known as <em>Multilevel Modeling</em> or by
                               <a href="https://en.wikipedia.org/wiki/Multilevel_model" target="_blank"> these other terms</a>. This is an approach for modeling <strong>nested data</strong>.
                               Scroll down to learn about <em>why</em> you would use this analytical approach.</p>
-                            <div id="scroll-wrapper">
-                              <FontAwesome id="scroll-down" name="chevron-down" size="3x" onClick={ this.props.clickEvent } />
-                            </div>
                           </div>
                 break;
             case 1:
@@ -110,6 +106,19 @@ class Sections extends Component {
                             </div>
                             <p>Thus, the <em>starting salary</em> for faculty member <code>i</code> depends on their department (<em>α<sub>j[i]</sub></em>), and their annual raise also varies
                               by department (<em>β<sub>j[i]</sub></em>)
+                            </p>
+                          </div>
+                break;
+            case 6:
+                var ele = <div>
+                            <h1>About</h1>
+                            <p>This project was built by <a href="http://mfviz.com/" target="_blank">Michael Freeman</a>, a faculty member at the University of Washington<a href="https://ischool.uw.edu/"
+                                target="_blank"> Information School</a>.
+                            </p>
+                            <p>
+                              All code for this project is <a href="https://github.com/mkfreeman/hierarchical-models/" target="_blank">on GitHub</a>, including the script to create the data
+                              and run regressions (done in <code>R</code>). Feel free to issue a pull request for improvements, and if you like it, share it on <a href="http://twitter.com/home?status=Check out a Visual Introduction to Hierarchical Modeling by @mf_viz."
+                                target="_blank">Twitter</a>.
                             </p>
                           </div>
                 break;
