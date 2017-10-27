@@ -2,7 +2,7 @@
 import * as d3 from 'd3';
 import d3tip from 'd3-tip';
 
-var ScatterPlot = function() {
+var ScatterPlot = function () {
     // Set default values
     var height = 500,
         width = window.innerWidth * .7,
@@ -27,13 +27,13 @@ var ScatterPlot = function() {
         yFormat = (d) => "$" + d3.format(".2s")(d)
 
     // Function returned by ScatterPlot
-    var chart = function(selection) {
+    var chart = function (selection) {
         // Height/width of the drawing area itself
         var chartHeight = height - margin.bottom - margin.top;
         var chartWidth = width - margin.left - margin.right;
 
         // Iterate through selections, in case there are multiple
-        selection.each(function(data) {
+        selection.each(function (data) {
             // Use the data-join to create the svg (if necessary)
             var ele = d3.select(this);
             var svg = ele
@@ -99,22 +99,22 @@ var ScatterPlot = function() {
             var tip = d3tip()
                 .attr('class', 'd3-tip')
                 .offset([-10, 0])
-                .html(function(d) {
-                    return "<strong>" + d.id + "</strong>";
+                .html(function (d) {
+                    return "<strong>" + d.color + "</strong>";
                 });
 
             ele
                 .select('svg')
                 .call(tip);
             // Calculate x and y scales
-            let xMax = d3.max(data.scatter, (d) => +d.x) * 1.05;
-            let xMin = d3.min(data.scatter, (d) => +d.x) - xMax / 15;
+            let xMax = d3.max(data.scatter, (d) => + d.x) * 1.05;
+            let xMin = d3.min(data.scatter, (d) => + d.x) - xMax / 15;
             xScale
                 .range([0, chartWidth])
                 .domain([xMin, xMax]);
 
-            var yMin = d3.min(data.scatter, (d) => +d.y) * .95;
-            var yMax = d3.max(data.scatter, (d) => +d.y) * 1.05;
+            var yMin = d3.min(data.scatter, (d) => + d.y) * .95;
+            var yMax = d3.max(data.scatter, (d) => + d.y) * 1.05;
             yScale
                 .range([chartHeight, 0])
                 .domain([yMin, yMax]);
@@ -127,7 +127,9 @@ var ScatterPlot = function() {
             ele
                 .select('.axis.x')
                 .transition()
-                .delay(hideAxes != true ? duration : 0)
+                .delay(hideAxes != true
+                    ? duration
+                    : 0)
                 .duration(1000)
                 .style('opacity', hideAxes == true
                     ? 0
@@ -137,7 +139,9 @@ var ScatterPlot = function() {
                 .select('.axis.y')
                 .transition()
                 .duration(1000)
-                .delay(hideAxes != true ? duration : 0)
+                .delay(hideAxes != true
+                    ? duration
+                    : 0)
                 .style('opacity', hideAxes == true
                     ? 0
                     : 1)
@@ -148,7 +152,9 @@ var ScatterPlot = function() {
                 .select('.title.x')
                 .text(xTitle)
                 .transition()
-                .delay(hideAxes != true ? duration : 0)
+                .delay(hideAxes != true
+                    ? duration
+                    : 0)
                 .duration(duration)
                 .style('opacity', hideAxes == true
                     ? 0
@@ -157,7 +163,9 @@ var ScatterPlot = function() {
                 .select('.title.y')
                 .text(yTitle)
                 .transition()
-                .delay(hideAxes != true ? duration : 0)
+                .delay(hideAxes != true
+                    ? duration
+                    : 0)
                 .duration(duration)
                 .style('opacity', hideAxes == true
                     ? 0
@@ -174,7 +182,7 @@ var ScatterPlot = function() {
                 // Nest your data *by group* using d3.nest()
                 var nestedData = d3
                     .nest()
-                    .key(function(d) {
+                    .key(function (d) {
                         return d[packGroup];
                     })
                     .entries(data.pack);
@@ -182,11 +190,11 @@ var ScatterPlot = function() {
                 // Define a hierarchy for your data using d3.hierarchy
                 var root = d3.hierarchy({
                     values: nestedData
-                }, function(d) {
+                }, function (d) {
                     return d.values;
                 })
-                    .sum(function(d) {
-                        return +d[packValue];
+                    .sum(function (d) {
+                        return + d[packValue];
                     });
                 // (Re)build your pack hierarchy data structure by passing your `root` to your
                 // `pack` function
@@ -194,7 +202,7 @@ var ScatterPlot = function() {
                 chartData = root
                     .descendants()
                     .filter((d) => d.depth != 0)
-                    .map(function(d) {
+                    .map(function (d) {
                         console.log(d.data.color)
                         return {
                             x: d.x,
@@ -224,7 +232,7 @@ var ScatterPlot = function() {
             let circles = ele
                 .select('.chartG')
                 .selectAll('circle')
-                .data(chartData, function(d) {
+                .data(chartData, function (d) {
                     return d.id
                 })
             // Use the .enter() method to get entering elements, and assign initial position
@@ -235,15 +243,14 @@ var ScatterPlot = function() {
                 .attr('cx', (d) => xScale(d.x))
                 .attr('cy', (d) => yScale(d.y))
                 .attr('r', 0)
-                .on('mouseover', tip.show)
-                .on('mouseout', tip.hide)
-                // Transition properties of the + update selections
+                // .on('mouseover', tip.show) .on('mouseout', tip.hide) Transition properties of
+                // the + update selections
                 .merge(circles)
                 .transition()
                 .duration(1500)
                 .delay(delay)
                 // .style('fill', (d) => colorScale(d.color))
-                .style('fill', function(d) {
+                .style('fill', function (d) {
                     return d.container == true
                         ? 'none'
                         : colorScale(d.color)
@@ -271,21 +278,21 @@ var ScatterPlot = function() {
             lines
                 .enter()
                 .append("line")
-                .attr('x1', function(d) {
+                .attr('x1', function (d) {
                     return xScale(d.values[0].x)
                 })
                 .attr('x2', (d) => xScale(d.values[0].x))
                 .attr('y1', (d) => yScale(d.values[0].y))
                 .attr('y2', (d) => yScale(d.values[0].y))
                 .attr("fill", "none")
-                .attr("stroke", function(d) {
+                .attr("stroke", function (d) {
                     return colorScale(d.key)
                 })
                 .attr("stroke-width", 1.5)
                 .transition()
                 .delay(duration)
                 .duration(duration)
-                .attr('x1', function(d) {
+                .attr('x1', function (d) {
                     return xScale(d.values[0].x)
                 })
                 .attr('y1', (d) => yScale(d.values[0].y))
@@ -295,14 +302,14 @@ var ScatterPlot = function() {
             lines
                 .transition()
                 .duration(duration)
-                .attr('x1', function(d) {
+                .attr('x1', function (d) {
                     return xScale(d.values[0].x)
                 })
                 .attr('y1', (d) => yScale(d.values[0].y))
                 // .attr('x2', (d) => xScale(d.values[0].x))
                 .attr('x2', (d) => xScale(d.values[1].x))
                 .attr('y2', (d) => yScale(d.values[1].y))
-                .delay(function(d, i) {
+                .delay(function (d, i) {
                     return i * 500
                 })
 
@@ -313,73 +320,73 @@ var ScatterPlot = function() {
     };
 
     // Getter/setter methods to change locally scoped options
-    chart.height = function(value) {
-        if (!arguments.length)
+    chart.height = function (value) {
+        if (!arguments.length) 
             return height;
         height = value;
         return chart;
     };
 
-    chart.width = function(value) {
-        if (!arguments.length)
+    chart.width = function (value) {
+        if (!arguments.length) 
             return width;
         width = value;
         return chart;
     };
 
-    chart.colorScale = function(value) {
-        if (!arguments.length)
+    chart.colorScale = function (value) {
+        if (!arguments.length) 
             return colorScale;
         colorScale = value;
         return chart;
     };
 
-    chart.xTitle = function(value) {
-        if (!arguments.length)
+    chart.xTitle = function (value) {
+        if (!arguments.length) 
             return xTitle;
         xTitle = value;
         return chart;
     };
 
-    chart.yTitle = function(value) {
-        if (!arguments.length)
+    chart.yTitle = function (value) {
+        if (!arguments.length) 
             return yTitle;
         yTitle = value;
         return chart;
     };
-    chart.radius = function(value) {
-        if (!arguments.length)
+    chart.radius = function (value) {
+        if (!arguments.length) 
             return radius;
         radius = value;
         return chart;
     }
-    chart.pack = function(value) {
-        if (!arguments.length)
+    chart.pack = function (value) {
+        if (!arguments.length) 
             return pack;
         pack = value;
         return chart;
     }
-    chart.packValue = function(value) {
-        if (!arguments.length)
+    chart.packValue = function (value) {
+        if (!arguments.length) 
             return packValue;
         packValue = value;
         return chart;
     }
-    chart.packGroup = function(value) {
-        if (!arguments.length)
+    chart.packGroup = function (value) {
+        if (!arguments.length) 
             return packGroup;
         packGroup = value;
         return chart;
     }
-    chart.delay = function(value) {
-        if (!arguments.length)
+    chart.delay = function (value) {
+        if (!arguments.length) 
             return delay;
         delay = value;
         return chart;
     };
 
-    chart.hideAxes = function(value) {
-        if (!arguments.length)
+    chart.hideAxes = function (value) {
+        if (!arguments.length) 
             return hideAxes;
         hideAxes = value;
         return chart;

@@ -37,7 +37,23 @@ class Sections extends Component {
             <em>departments</em>.
           </blockquote>
           <p>As you could imagine, the group (<em>department</em>) that a faculty member
-belongs to could determine their salary in different ways.
+belongs to could determine their salary in different ways. In this example,
+we'll consider faculty who work in the&nbsp;
+            <text style={{
+              color: 'rgba(148, 103, 189, .5)'
+            }}>Informatics</text>,&nbsp;
+            <text style={{
+              color: 'rgba(214, 39, 40, .5)'
+            }}>English</text>,&nbsp;
+            <text style={{
+              color: 'rgba(255, 127, 14, .5)'
+            }}>Sociology</text>,&nbsp;
+            <text style={{
+              color: 'rgba(44, 160, 44, .5)'
+            }}>Biology</text>, and&nbsp;
+            <text style={{
+              color: 'rgba(140, 86, 75, .5)'
+            }}>Statistics</text>&nbsp; departments.
           </p>
         </div>
         break;
