@@ -320,7 +320,7 @@ class App extends React.Component {
                     <div class="footer-copyright">
                         <div class="container">
                             © 2017 Copyright
-                            <a href="http://mfviz.com/" target="_blank">Michael Freeman</a>
+                            <a href="http://mfviz.com/" target="_blank">&nbsp;Michael Freeman</a>
                             <a class="right" target="_blank" href="http://twitter.com/mf_viz">@mf_viz</a>
                         </div>
                     </div>
