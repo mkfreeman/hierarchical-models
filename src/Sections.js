@@ -92,7 +92,7 @@ predict salary:</p>
             would have the following salary:
           </p>
           <div className="eq-wrapper">
-            <Tex texContent="\hat{salary_i} = \beta_0{j[i]} + \beta_1 * experience_i"/>
+            <Tex texContent="\hat{salary_i} = \beta_{0j[i]} + \beta_1 * experience_i"/>
           </div>
           <p>This strategy allows us to capture variation in the starting salary of our
             faculty. However, there may be addition information we want to incorporate into
@@ -143,11 +143,10 @@ predict salary:</p>
           <div className="eq-wrapper">
             <Tex texContent="\hat{y_i} = \alpha_{j[i]} + \beta_{j[i]}x_i"/>
           </div>
-          <p>Thus, the
-            <em>starting salary</em>&nbsp; for faculty member
-            <code>i</code>
-            depends on their department (<em>α<sub>j[i]</sub>
-            </em>), and their annual raise also varies by department (<em>β<sub>j[i]</sub>
+          <p>Thus, the&nbsp;
+            <em>starting salary</em>&nbsp; for faculty member&nbsp;
+            <code>i</code>&nbsp; depends on their department (<em>α<sub>j[i]</sub>
+            </em>), and their annual raise also varies by department (<em>β<sub>j[i]</sub>.
             </em>)
           </p>
         </div>
@@ -156,7 +155,7 @@ predict salary:</p>
         var ele = <div>
           <h1>About</h1>
           <p>This project was built by&nbsp;
-            <a href="http://mfviz.com/" target="_blank">Michael Freeman</a>, a faculty member at the University of Washington<a href="https://ischool.uw.edu/" target="_blank">
+            <a href="http://mfviz.com/" target="_blank">Michael Freeman</a>, a faculty member at the University of Washington&nbsp;<a href="https://ischool.uw.edu/" target="_blank">
               Information School</a>.
           </p>
           <p>
@@ -165,7 +164,7 @@ predict salary:</p>
             <code>R</code>). Feel free to issue a pull request for improvements, and if you
             like it, share it on&nbsp;
             <a
-              href="http://twitter.com/home?status=Check out a Visual Introduction to Hierarchical Modeling by @mf_viz."
+              href="http://twitter.com/home?status=Check out a Visual Introduction to Hierarchical Modeling by @mf_viz. http://mfviz.com/hierarchical-models"
               target="_blank">Twitter</a>. Layout inspired by&nbsp;
             <a href="https://twitter.com/tonyhschu" target="_blank">Tony Chu</a>.
           </p>
