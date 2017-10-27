@@ -2,6 +2,8 @@ import './App.css';
 import ScatterPlotComponent from './ScatterPlotComponent';
 import * as d3 from 'd3';
 import Sections from './Sections';
+import {Helmet} from 'react-helmet';
+
 var ReactGA = require('react-ga');
 var FontAwesome = require('react-fontawesome');
 function logPageView() {
@@ -23,7 +25,7 @@ var scroll = Scroll.animateScroll;
 var scrollSpy = Scroll.scrollSpy;
 var scroller = Scroll.scroller;
 
-var durationFn = function(deltaTop) {
+var durationFn = function (deltaTop) {
     return deltaTop;
 };
 
@@ -86,7 +88,7 @@ class App extends React.Component {
                 }, {
                     pack: false,
                     hideAxes: true
-                },
+                }
             ],
             colorScales: [
                 d3
@@ -123,28 +125,23 @@ class App extends React.Component {
         document.title = "Hierachical Models";
         Events
             .scrollEvent
-            .register('begin', function() {
+            .register('begin', function () {
                 // console.log("begin", arguments);
             });
 
         Events
             .scrollEvent
-            .register('end', function() {
+            .register('end', function () {
                 // console.log("end", arguments);
             });
 
         scrollSpy.update();
-        d3.csv('data/faculty-data.csv', function(error, data) {
+        d3.csv('data/faculty-data.csv', function (error, data) {
             // let formatted = data.map((d) => {{id:d.id, x:d.experience, y:d.salary})
-            let formatted = data.map(function(d) {
-                return {
-                    id: d.ids,
-                    x: d.experience,
-                    y: d.salary,
-                    color: d.department
-                }
+            let formatted = data.map(function (d) {
+                return {id: d.ids, x: d.experience, y: d.salary, color: d.department}
             })
-            let random = data.map(function(d) {
+            let random = data.map(function (d) {
                 return {
                     id: d.ids,
                     x: Math.random(),
@@ -154,10 +151,10 @@ class App extends React.Component {
             });
 
             // Function to grab column of interest
-            let GetLineData = function(col) {
-                let allData = data.map(function(d) {
+            let GetLineData = function (col) {
+                let allData = data.map(function (d) {
                     return {
-                        x: +d.experience,
+                        x: + d.experience,
                         y: d[col],
                         color: d.department
                     }
@@ -171,13 +168,13 @@ class App extends React.Component {
                 // New function to get line data
                 let nested = lineNest.entries(allData);
 
-                nested.map(function(d) {
-                    let xMin = d3.min(d.values, (d) => +d.x)
-                    let xMax = d3.max(d.values, (d) => +d.x)
+                nested.map(function (d) {
+                    let xMin = d3.min(d.values, (d) => + d.x)
+                    let xMax = d3.max(d.values, (d) => + d.x)
                     let ret = d
                         .values
                         .filter((d) => d.x == xMax | d.x == xMin)
-                        .sort(function(a, b) {
+                        .sort(function (a, b) {
                             return a.x - b.x
                         })
                     d.values = [
@@ -194,7 +191,13 @@ class App extends React.Component {
             let simpleModel = GetLineData('simple.model');
             this.setState({
                 allData: [
-                    random, formatted, formatted, formatted, formatted, formatted, random
+                    random,
+                    formatted,
+                    formatted,
+                    formatted,
+                    formatted,
+                    formatted,
+                    random
                 ],
                 allLineData: [
                     [],
@@ -221,92 +224,129 @@ class App extends React.Component {
     handleSetActive(to) {
         let dataStep = 0;
         switch (to) {
-            case( 'intro'):
+            case('intro'):
                 dataStep = 0
                 break;
-            case( 'nested-data'):
+            case('nested-data'):
                 dataStep = 1
                 break;
-            case( 'linear'):
+            case('linear'):
                 dataStep = 2
                 break;
-            case( 'random-intercept'):
+            case('random-intercept'):
                 dataStep = 3
                 break;
-            case( 'random-slope'):
+            case('random-slope'):
                 dataStep = 4
                 break;
-            case ( 'random-slope-intercept'):
+            case('random-slope-intercept'):
                 dataStep = 5;
                 break;
-            case ( 'about'):
+            case('about'):
                 dataStep = 6;
                 break;
         }
-        this.setState({
-            dataStep: dataStep
-        })
+        this.setState({dataStep: dataStep})
     }
     render() {
         let colorScale = this.state.colorScales[this.state.dataStep];
         let chartData = this.state.allData[this.state.dataStep];
         let lineData = this.state.allLineData[this.state.dataStep];
         let scatterSettings = this.state.scatterSettings[this.state.dataStep];
-        let nextIndex = this.state.dataStep == elementList.length - 1 ? 0 : this.state.dataStep + 1
+        let nextIndex = this.state.dataStep == elementList.length - 1
+            ? 0
+            : this.state.dataStep + 1
         let scrollNext = () => scroller.scrollTo(elementList[nextIndex].id, {
             duration: 1500,
             delay: 100,
             smooth: true,
-            offset: nextIndex == 0 ? 0 : 50
+            offset: nextIndex == 0
+                ? 0
+                : 50
         })
-        let icon = nextIndex == 0 ? "chevron-up" : "chevron-down"
+        let icon = nextIndex == 0
+            ? "chevron-up"
+            : "chevron-down"
         return (
             <div>
-              <div className="container">
-                <nav className="navbar navbar-default navbar-fixed-top">
-                  <div className="container">
-                    <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                      <ul className="nav navbar-nav">
-                        { elementList.map(function(d) {
-                              let offset = d.id == "intro" ? 0 : 50;
-                              return <li>
-                                       <Link activeClass="active" onSetActive={ this
-                                                                                    .handleSetActive
-                                                                                    .bind(this) } className={ d.id } offset={ offset } to={ d.id } spy={ true }
-                                         smooth={ true } duration={ 500 }>
-                                       { d.name }
-                                       </Link>
-                                     </li>
-                          }.bind(this)) }
-                      </ul>
+                <Helmet>
+                    <meta
+                        name="twitter:title"
+                        content="A Visual Introduction to Hierarchical Models"/>
+                    <meta
+                        name="twitter:description"
+                        content="A visual explanation of multi-level modeling"/>
+                    <meta name="twitter:image" content="%PUBLIC_URL%/imgs/twitter-img.png"/>
+                    <link rel="manifest" href="%PUBLIC_URL%/manifest.json"/>
+                    <meta property="og:url" content="http://mfviz.com/hierarchical-models"/>
+                    <meta
+                        property="og:title"
+                        content="A Visual Introduction to Hierarchical Models"/>
+                    <meta
+                        property="og:description"
+                        content="A visual explanation of multi-level modeling"/>
+                    <meta property="og:image" content="%PUBLIC_URL%/imgs/twitter-img.png"/>
+                </Helmet>
+                <div className="container">
+                    <nav className="navbar navbar-default navbar-fixed-top">
+                        <div className="container">
+                            <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                                <ul className="nav navbar-nav">
+                                    {elementList
+                                        .map(function (d) {
+                                            let offset = d.id == "intro"
+                                                ? 0
+                                                : 50;
+                                            return <li>
+                                                <Link
+                                                    activeClass="active"
+                                                    onSetActive={this
+                                                    .handleSetActive
+                                                    .bind(this)}
+                                                    className={d.id}
+                                                    offset={offset}
+                                                    to={d.id}
+                                                    spy={true}
+                                                    smooth={true}
+                                                    duration={500}>
+                                                    {d.name}
+                                                </Link>
+                                            </li>
+                                        }.bind(this))}
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+                <div className="container">
+                    <ScatterPlotComponent
+                        settings={scatterSettings}
+                        lineData={lineData}
+                        colorScale={colorScale}
+                        data={chartData}
+                        xTitle="Years of Experience"
+                        yTitle="Salary"/> {elementList
+                        .map(function (d, i) {
+                            return <Element name={d.id} className="element">
+                                <Sections sectionNumber={i}/>
+                            </Element>
+                        }.bind(this))}
+                    <div id="scroll-wrapper">
+                        <FontAwesome id="scroll-down" name={icon} size="3x" onClick={scrollNext}/>
                     </div>
-                  </div>
-                </nav>
-              </div>
-              <div className="container">
-                <ScatterPlotComponent settings={ scatterSettings } lineData={ lineData } colorScale={ colorScale } data={ chartData } xTitle="Years of Experience"
-                  yTitle="Salary" />
-                { elementList.map(function(d, i) {
-                      return <Element name={ d.id } className="element">
-                               <Sections sectionNumber={ i } />
-                             </Element>
-                  }.bind(this)) }
-                <div id="scroll-wrapper">
-                  <FontAwesome id="scroll-down" name={ icon } size="3x" onClick={ scrollNext } />
                 </div>
-              </div>
-              <footer>
-                <div class="footer-copyright">
-                  <div class="container">
-                    © 2017 Copyright <a href="http://mfviz.com/" target="_blank">Michael Freeman</a>
-                    <a class="right" target="_blank" href="http://twitter.com/mf_viz">@mf_viz</a>
-                  </div>
-                </div>
-              </footer>
+                <footer>
+                    <div class="footer-copyright">
+                        <div class="container">
+                            © 2017 Copyright
+                            <a href="http://mfviz.com/" target="_blank">Michael Freeman</a>
+                            <a class="right" target="_blank" href="http://twitter.com/mf_viz">@mf_viz</a>
+                        </div>
+                    </div>
+                </footer>
             </div>
-            );
+        );
     }
-}
-;
+};
 
 export default App;
