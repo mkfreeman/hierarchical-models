@@ -2,7 +2,6 @@ import './App.css';
 import ScatterPlotComponent from './ScatterPlotComponent';
 import * as d3 from 'd3';
 import Sections from './Sections';
-import {Helmet} from 'react-helmet';
 
 var ReactGA = require('react-ga');
 var FontAwesome = require('react-fontawesome');
@@ -269,24 +268,6 @@ class App extends React.Component {
             : "chevron-down"
         return (
             <div>
-                <Helmet>
-                    <meta
-                        name="twitter:title"
-                        content="A Visual Introduction to Hierarchical Models"/>
-                    <meta
-                        name="twitter:description"
-                        content="A visual explanation of multi-level modeling"/>
-                    <meta name="twitter:image" content="%PUBLIC_URL%/imgs/twitter-img.png"/>
-                    <link rel="manifest" href="%PUBLIC_URL%/manifest.json"/>
-                    <meta property="og:url" content="http://mfviz.com/hierarchical-models"/>
-                    <meta
-                        property="og:title"
-                        content="A Visual Introduction to Hierarchical Models"/>
-                    <meta
-                        property="og:description"
-                        content="A visual explanation of multi-level modeling"/>
-                    <meta property="og:image" content="%PUBLIC_URL%/imgs/twitter-img.png"/>
-                </Helmet>
                 <div className="container">
                     <nav className="navbar navbar-default navbar-fixed-top">
                         <div className="container">
