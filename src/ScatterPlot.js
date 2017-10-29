@@ -38,14 +38,14 @@ var ScatterPlot = function () {
             var ele = d3.select(this);
             var svg = ele
                 .selectAll("svg")
+                .attr('width', width)
+                .attr("height", height)
                 .data([data]);
 
             // Append static elements (i.e., only added once)
             var gEnter = svg
                 .enter()
                 .append("svg")
-                .attr('width', width)
-                .attr("height", height)
                 .append("g");
 
             // g element for markers
@@ -126,6 +126,7 @@ var ScatterPlot = function () {
                 .tickFormat(yFormat);
             ele
                 .select('.axis.x')
+                .attr('transform', 'translate(' + margin.left + ',' + (chartHeight + margin.top) + ')')
                 .transition()
                 .delay(hideAxes != true
                     ? duration
@@ -151,6 +152,7 @@ var ScatterPlot = function () {
             ele
                 .select('.title.x')
                 .text(xTitle)
+                .attr('transform', 'translate(' + (margin.left + chartWidth / 2) + ',' + (chartHeight + margin.top + 40) + ')')
                 .transition()
                 .delay(hideAxes != true
                     ? duration
@@ -161,6 +163,7 @@ var ScatterPlot = function () {
                     : 1)
             ele
                 .select('.title.y')
+                .attr('transform', 'translate(' + (margin.left - 50) + ',' + (margin.top + chartHeight / 2) + ') rotate(-90)')
                 .text(yTitle)
                 .transition()
                 .delay(hideAxes != true

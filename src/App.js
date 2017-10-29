@@ -64,6 +64,8 @@ class App extends React.Component {
         this.state = {
             dataStep: 0,
             allData: [],
+            width: 0,
+            height: 0,
             allLineData: [],
             scatterSettings: [
                 {
@@ -134,6 +136,9 @@ class App extends React.Component {
                 // console.log("end", arguments);
             });
 
+        // Listen for resize
+        window.addEventListener("resize", this.onResize());
+
         scrollSpy.update();
         d3.csv('data/faculty-data.csv', function (error, data) {
             // let formatted = data.map((d) => {{id:d.id, x:d.experience, y:d.salary})
@@ -188,6 +193,9 @@ class App extends React.Component {
             let randomIntercept = GetLineData('random.intercpet.preds');
             let randomSlopeIntercept = GetLineData('random.slope.int.preds');
             let simpleModel = GetLineData('simple.model');
+
+            // Width
+            let dims = this.getDimensions();
             this.setState({
                 allData: [
                     random,
@@ -205,13 +213,45 @@ class App extends React.Component {
                     randomIntercept,
                     randomSlopes,
                     randomSlopeIntercept
-                ]
+                ],
+                width: dims.width,
+                height: dims.height
             });
         }.bind(this))
     }
     scrollToTop() {
         scroll.scrollToTop();
     }
+
+    // Get dimensions
+    getDimensions() {
+        let wrapper = document.getElementById('main-wrapper');
+        let fraction = window.innerWidth < 960
+            ? .45
+            : .75;
+        let width = wrapper == null
+            ? 0
+            : wrapper.offsetWidth * fraction;
+        let height = wrapper == null
+            ? 0
+            : window.innerHeight - 140;
+
+        let sectionWidth = wrapper == null
+            ? 0
+            : wrapper.offsetWidth * (1 - fraction);
+        return {width: width, height: height, sectionWidth: sectionWidth};
+    }
+
+    // Resize
+    updateDimensions() {
+        let dims = this.getDimensions();
+        this.setState({width: dims.width, height: dims.height})
+    }
+
+    onResize = () => this
+        .updateDimensions
+        .bind(this);
+
     componentWillUnmount() {
         Events
             .scrollEvent
@@ -219,6 +259,10 @@ class App extends React.Component {
         Events
             .scrollEvent
             .remove('end');
+
+        // Resize event
+        window.removeEventListener("resize", this.onResize);
+
     }
     handleSetActive(to) {
         let dataStep = 0;
@@ -266,6 +310,12 @@ class App extends React.Component {
         let icon = nextIndex == 0
             ? "chevron-up"
             : "chevron-down"
+
+        let sectionStyle = {
+            width: this
+                .getDimensions()
+                .sectionWidth
+        }
         return (
             <div>
                 <div className="container">
@@ -299,17 +349,19 @@ class App extends React.Component {
                         </div>
                     </nav>
                 </div>
-                <div className="container">
+                <div id="main-wrapper" className="container">
                     <ScatterPlotComponent
                         settings={scatterSettings}
                         lineData={lineData}
                         colorScale={colorScale}
                         data={chartData}
+                        width={this.state.width}
+                        height={this.state.height}
                         xTitle="Years of Experience"
                         yTitle="Salary"/> {elementList
                         .map(function (d, i) {
                             return <Element name={d.id} className="element">
-                                <Sections sectionNumber={i}/>
+                                <Sections sectionNumber={i} styles={sectionStyle}/>
                             </Element>
                         }.bind(this))}
                     <div id="scroll-wrapper">
@@ -317,8 +369,8 @@ class App extends React.Component {
                     </div>
                 </div>
                 <footer>
-                    <div class="footer-copyright">
-                        <div class="container">
+                    <div className="footer-copyright">
+                        <div className="container">
                             © 2017 Copyright
                             <a href="http://mfviz.com/" target="_blank">&nbsp;Michael Freeman</a>
                             <a class="right" target="_blank" href="http://twitter.com/mf_viz">@mf_viz</a>

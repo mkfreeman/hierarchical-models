@@ -189,7 +189,8 @@ predict salary:</p>
       default:
         var ele = '';
     }
-    return <div className="Sections">
+    console.log('styles ', this.props.styles)
+    return <div className="Sections" style={this.props.styles}>
       {ele}
     </div>;
   }
