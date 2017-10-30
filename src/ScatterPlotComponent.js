@@ -14,6 +14,30 @@ class ScatterPlotComponent extends Component {
 
     // Create chart
     update() {
+        // Set margin
+        let margin = {};
+        if (this.props.settings.pack == true) {
+            margin = {
+                left: 0,
+                bottom: 0,
+                top: 0,
+                right: 0
+            };
+        } else if (this.props.hideAxes == true) {
+            margin = {
+                left: 0,
+                bottom: 0,
+                top: 0,
+                right: 0
+            };
+        } else {
+            margin = {
+                left: 70,
+                bottom: 50,
+                top: 0,
+                right: 50
+            }
+        }
         // Update parameters
         this
             .scatter
@@ -27,9 +51,8 @@ class ScatterPlotComponent extends Component {
             .pack(this.props.settings.pack)
             .packValue('y')
             .hideAxes(this.props.settings.hideAxes)
-            .packGroup('color');
-
-        // Call d3 update
+            .packGroup('color')
+        // .margin(margin) Call d3 update
         d3
             .select(this.root)
             .datum({scatter: this.props.data, pack: this.props.data, line: this.props.lineData})

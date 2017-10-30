@@ -218,9 +218,15 @@ var ScatterPlot = function () {
                     });
                 xMin = d3.min(chartData, (d) => d.x)
                 xMax = d3.max(chartData, (d) => d.x)
+                // Adjust for margins
+                let shift = margin.left;
+                let range = [
+                    xMin - shift,
+                    xMax - shift
+                ]
                 xScale
                     .domain([xMin, xMax])
-                    .range([xMin, xMax])
+                    .range(range)
                 yMin = d3.min(chartData, (d) => d.y)
                 yMax = d3.max(chartData, (d) => d.y)
                 yScale
@@ -230,8 +236,9 @@ var ScatterPlot = function () {
             } else {
                 chartData = data.scatter;
             }
-            console.log('pack ', pack, 'chart data ', chartData)
-            // Draw markers
+            // console.log('pack ', pack, 'chart data ', chartData) ele .select('.chartG')
+            // .transition()     .duration(duration * 3) .attr('transform', 'translate(' +
+            // margin.left + ',' + margin.top + ')') Draw markers
             let circles = ele
                 .select('.chartG')
                 .selectAll('circle')
@@ -385,6 +392,12 @@ var ScatterPlot = function () {
         if (!arguments.length) 
             return delay;
         delay = value;
+        return chart;
+    };
+    chart.margin = function (value) {
+        if (!arguments.length) 
+            return margin;
+        margin = value;
         return chart;
     };
 
