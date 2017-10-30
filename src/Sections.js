@@ -16,7 +16,7 @@ class Sections extends Component {
           <h1 id="intro">An Introduction to Hierarchical Modeling</h1>
           <p>This visual explanation introduces the statistical concept of&nbsp;
             <strong>Hierarchical Modeling</strong>, also known as&nbsp;
-            <em>Mixed Effects Modeling</em>&npsb; or by&nbsp;
+            <em>Mixed Effects Modeling</em>&nbsp;or by&nbsp;
             <a href="https://en.wikipedia.org/wiki/Multilevel_model" target="_blank">
               these other terms</a>. This is an approach for modeling&nbsp;
             <strong>nested data</strong>. Keep reading to learn how to translated an
