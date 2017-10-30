@@ -67,13 +67,54 @@ nav li {
 }
 
 #scroll-down {
-    color: black;
-    opacity: .3;
     position: fixed;
     bottom: 40px;
-    cursor: pointer;
 }
 
 #scroll-wrapper {
     margin-left: calc(25%/2 - 15px);
+}
+
+#next-step {
+    float:right;
+}
+
+#last-step {
+    float:left;
+}
+
+.fa {
+    cursor: pointer;    
+    color: black;
+    opacity: .3;
+}
+
+.step-label {
+    font-size:20px;
+    opacity:.5;
+    line-height:45px;
+}
+
+.small-menu {
+    text-align: center;
+    padding-top:3px;
+}
+
+
+.menu-large {
+    display:none;
+}
+@media screen and (min-width:997px){
+    .small-menu {
+        display:none;
+    }
+    .menu-large {
+        display:block;
+    }
+}
+
+.inactive-scroll {
+    pointer-events: none;
+    cursor:move;
+    opacity:.1;
 }

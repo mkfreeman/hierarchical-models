@@ -306,6 +306,14 @@ class App extends React.Component {
                 ? 0
                 : 50
         })
+        let scrollLast = () => scroller.scrollTo(elementList[this.state.dataStep - 1].id, {
+            duration: 1500,
+            delay: 100,
+            smooth: true,
+            offset: nextIndex == 0
+                ? 0
+                : 50
+        })
         let icon = nextIndex == 0
             ? "chevron-up"
             : "chevron-down"
@@ -319,7 +327,7 @@ class App extends React.Component {
                 <div className="container">
                     <nav className="navbar navbar-default navbar-fixed-top">
                         <div className="container">
-                            <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <div className="menu-large">
                                 <ul className="nav navbar-nav">
                                     {elementList
                                         .map(function (d) {
@@ -343,6 +351,30 @@ class App extends React.Component {
                                             </li>
                                         }.bind(this))}
                                 </ul>
+                            </div>
+                            <div className="small-menu">
+                                <FontAwesome
+                                    id="last-step"
+                                    name="chevron-left"
+                                    size="3x"
+                                    onClick={scrollLast}
+                                    className={this.state.dataStep == 0
+                                    ? 'inactive-scroll'
+                                    : 'active-scroll'}/> {elementList.filter((d, i) => i == this.state.dataStep)
+                                    .map(function (d) {
+                                        let offset = d.id == "intro"
+                                            ? 0
+                                            : 50;
+                                        return <span className="step-label">{d.name}</span>
+                                    }.bind(this))}
+                                <FontAwesome
+                                    className={this.state.dataStep == elementList.length - 1
+                                    ? 'inactive-scroll'
+                                    : 'active-scroll'}
+                                    id="next-step"
+                                    name="chevron-right"
+                                    size="3x"
+                                    onClick={scrollNext}/>
                             </div>
                         </div>
                     </nav>
