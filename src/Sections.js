@@ -33,30 +33,26 @@ class Sections extends Component {
           <blockquote>Estimating faculty salaries, where the faculty work in different&nbsp;
             <em>departments</em>.
           </blockquote>
-          <p>As you could imagine, the group (<em>department</em>) that a faculty member
-belongs to could determine their salary in different ways. In this example,
-we'll consider faculty who work in the&nbsp;
-            <div
-              className="inline"
-              style={{
-              display: 'inline-block'
-            }}>
-              <p style={{
-                color: 'rgba(148, 103, 189, .5)'
-              }}>Informatics</p>,&nbsp;
-              <p style={{
-                color: 'rgba(214, 39, 40, .5)'
-              }}>English</p>,&nbsp;
-              <p style={{
-                color: 'rgba(255, 127, 14, .5)'
-              }}>Sociology</p>,a&nbsp;
-              <p style={{
-                color: 'rgba(44, 160, 44, .5)'
-              }}>Biology</p>, and&nbsp;
-              <p style={{
-                color: 'rgba(140, 86, 75, .5)'
-              }}>Statistics</p>&nbsp; departments.
-            </div>
+          <p style={{
+            float: 'left'
+          }}>As you could imagine, the group (<em>department</em>)
+that a faculty member belongs to could determine their salary in different ways.
+In this example, we'll consider faculty who work in the&nbsp;
+            <span style={{
+              color: 'rgba(148, 103, 189, .5)'
+            }}>Informatics</span>,&nbsp;
+            <span style={{
+              color: 'rgba(214, 39, 40, .5)'
+            }}>English</span>,&nbsp;
+            <span style={{
+              color: 'rgba(255, 127, 14, .5)'
+            }}>Sociology</span>,&nbsp;
+            <span style={{
+              color: 'rgba(44, 160, 44, .5)'
+            }}>Biology</span>, and&nbsp;
+            <span style={{
+              color: 'rgba(140, 86, 75, .5)'
+            }}>Statistics</span>&nbsp; departments.
           </p>
         </div>
         break;
