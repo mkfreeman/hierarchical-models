@@ -12,7 +12,6 @@ function logPageView() {
     ReactGA.pageview(window.location.pathname + window.location.search);
 }
 var React = require('react');
-var ReactDOM = require('react-dom');
 var Scroll = require('react-scroll');
 
 // Scrolling variables
@@ -58,9 +57,6 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
-        this.scrollToTop = this
-            .scrollToTop
-            .bind(this);
         this.state = {
             dataStep: 0,
             allData: [],
@@ -126,22 +122,17 @@ class App extends React.Component {
         document.title = "Hierachical Models";
         Events
             .scrollEvent
-            .register('begin', function () {
-                // console.log("begin", arguments);
-            });
-
+            .register('begin', function () {});
+        
         Events
             .scrollEvent
-            .register('end', function () {
-                // console.log("end", arguments);
-            });
+            .register('end', function () {});
 
         // Listen for resize
         window.addEventListener("resize", this.onResize());
 
         scrollSpy.update();
         d3.csv('data/faculty-data.csv', function (error, data) {
-            // let formatted = data.map((d) => {{id:d.id, x:d.experience, y:d.salary})
             let formatted = data.map(function (d) {
                 return {id: d.ids, x: d.experience, y: d.salary, color: d.department}
             })
@@ -194,7 +185,7 @@ class App extends React.Component {
             let randomSlopeIntercept = GetLineData('random.slope.int.preds');
             let simpleModel = GetLineData('simple.model');
 
-            // Width
+            // Screen dimensions
             let dims = this.getDimensions();
             this.setState({
                 allData: [
@@ -218,9 +209,6 @@ class App extends React.Component {
                 height: dims.height
             });
         }.bind(this))
-    }
-    scrollToTop() {
-        scroll.scrollToTop();
     }
 
     // Get dimensions
@@ -330,25 +318,26 @@ class App extends React.Component {
                             <div className="menu-large">
                                 <ul className="nav navbar-nav">
                                     {elementList
-                                        .map(function (d) {
+                                        .map(function (d, i) {
                                             let offset = d.id == "intro"
                                                 ? 0
                                                 : 50;
-                                            return <li>
-                                                <Link
-                                                    activeClass="active"
-                                                    onSetActive={this
-                                                    .handleSetActive
-                                                    .bind(this)}
-                                                    className={d.id}
-                                                    offset={offset}
-                                                    to={d.id}
-                                                    spy={true}
-                                                    smooth={true}
-                                                    duration={500}>
-                                                    {d.name}
-                                                </Link>
-                                            </li>
+                                            return <li key={'link-' + i}>
+                                                    <Link
+                                                        activeClass="active"
+                                                        onSetActive={this
+                                                        .handleSetActive
+                                                        .bind(this)}
+                                                        className={d.id}
+                                                        offset={offset}
+                                                        to={d.id}
+                                                        spy={true}
+                                                        smooth={true}
+                                                        duration={500}
+                                                        >
+                                                        {d.name}
+                                                    </Link>
+                                                </li>
                                         }.bind(this))}
                                 </ul>
                             </div>
@@ -360,13 +349,15 @@ class App extends React.Component {
                                     onClick={scrollLast}
                                     className={this.state.dataStep == 0
                                     ? 'inactive-scroll'
-                                    : 'active-scroll'}/> {elementList.filter((d, i) => i == this.state.dataStep)
-                                    .map(function (d) {
-                                        let offset = d.id == "intro"
-                                            ? 0
-                                            : 50;
-                                        return <span className="step-label">{d.name}</span>
-                                    }.bind(this))}
+                                    : 'active-scroll'}/> 
+                                    {elementList.filter((d, i) => i == this.state.dataStep)
+                                        .map(function (d, i) {
+                                            let offset = d.id == "intro"
+                                                ? 0
+                                                : 50;
+                                            return <span key={'step-label-' + i} className="step-label">{d.name}</span>
+                                        }.bind(this))
+                                    }
                                 <FontAwesome
                                     className={this.state.dataStep == elementList.length - 1
                                     ? 'inactive-scroll'
@@ -389,11 +380,12 @@ class App extends React.Component {
                         height={this.state.height}
                         marginLeft={dims.fullWidth - dims.width}
                         xTitle="Years of Experience"
-                        yTitle="Salary"/> {elementList
+                        yTitle="Salary"/> 
+                        {elementList
                         .map(function (d, i) {
-                            return <Element name={d.id} className="element">
-                                <Sections sectionNumber={i} styles={sectionStyle}/>
-                            </Element>
+                            return <Element key={'ele-' + i} name={d.id} className="element">
+                                    <Sections sectionNumber={i} styles={sectionStyle}/>
+                                </Element>
                         }.bind(this))}
                     <div id="scroll-wrapper">
                         <FontAwesome id="scroll-down" name={icon} size="3x" onClick={scrollNext}/>
@@ -404,7 +396,7 @@ class App extends React.Component {
                         <div className="container">
                             © 2017 Copyright
                             <a href="http://mfviz.com/" target="_blank">&nbsp;Michael Freeman</a>
-                            <a class="right" target="_blank" href="http://twitter.com/mf_viz">@mf_viz</a>
+                            <a className="right" target="_blank" href="http://twitter.com/mf_viz">@mf_viz</a>
                         </div>
                     </div>
                 </footer>

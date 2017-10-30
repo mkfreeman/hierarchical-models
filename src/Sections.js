@@ -1,8 +1,7 @@
 // Sections
 import React, {Component} from 'react';
-import {Tex, InlineTex} from 'react-tex';
+import {Tex} from 'react-tex';
 import './Sections.css';
-var ReactMarkdown = require('react-markdown');
 
 // Written Sections
 class Sections extends Component {
@@ -10,21 +9,22 @@ class Sections extends Component {
     super(props)
   }
   render() {
+    let ele = null;
     switch (this.props.sectionNumber) {
       case 0:
-        var ele = <div>
+        ele = <div>
           <h1 id="intro">An Introduction to Hierarchical Modeling</h1>
           <p>This visual explanation introduces the statistical concept of&nbsp;
             <strong>Hierarchical Modeling</strong>, also known as&nbsp;
-            <em>Multilevel Modeling</em>
-            or by&nbsp;
+            <em>Mixed Effects Modeling</em>&npsb; or by&nbsp;
             <a href="https://en.wikipedia.org/wiki/Multilevel_model" target="_blank">
               these other terms</a>. This is an approach for modeling&nbsp;
-            <strong>nested data</strong>. Scroll down to learn about various implementations of hierarchical models.</p>
+            <strong>nested data</strong>. Keep reading to learn how to translated an
+            understanding of your data into a hierarchical model specification.</p>
         </div>
         break;
       case 1:
-        var ele = <div>
+        ele = <div>
           <h1>Nested Data</h1>
           <p>You’ll frequently encounter nested data structures when doing analytical
             work. These are instances in which each observation is a member of a group, and
@@ -61,7 +61,7 @@ we'll consider faculty who work in the&nbsp;
         </div>
         break;
       case 2:
-        var ele = <div>
+        ele = <div>
           <h1>A Linear Approach</h1>
           <p>Let's imagine that you're trying to estimate faculty salary based on the
             number of years of experience that they have. A simple (linear) model could be
@@ -71,26 +71,27 @@ we'll consider faculty who work in the&nbsp;
             <Tex texContent="\hat{y} = \beta_0 + \beta_1x_1 + ... + \beta_nx_n"/>
           </div>
           <p>In the above equation, you would estimate the parameters (beta values) for
-            your variables of interest. These are knows as the&nbsp;
-            <strong>fixed effects</strong>&nbsp; because they are constant (<em>fixed</em>)
+            your variables of interest. These are known as the&nbsp;
+            <strong>fixed effects</strong>&nbsp;because they are constant (<em>fixed</em>)
 for each individual. In our case, we would simply use years of experience to
 predict salary:</p>
           <div className="eq-wrapper">
             <Tex texContent="\hat{salary_i} = \beta_0 + \beta_1 * experience_i"/>
           </div>
           <p>
-            However, it's clear that there's variation in salary&nbsp;
+            While this provides some information about the observed relationship, it's clear
+            that there's variation in salary&nbsp;
             <strong>by department</strong>. The methods introduced below allow us to capture
-            that information in different ways.
+            that variation in different ways.
           </p>
         </div>
         break;
       case 3:
-        var ele = <div>
+        ele = <div>
           <h1>Random Intercepts</h1>
           <p>It may be the case that each&nbsp;
             <strong>department</strong>&nbsp; has a different starting salary for their
-            faculty members, and the annual salary increase is consistent across the
+            faculty members, and the annual salary increase rate is consistent across the
             university. If we believe this to be the case, we would want to allow the&nbsp;
             <strong>intercept to vary</strong>&nbsp;
             <em>by group</em>. We could describe a&nbsp;
@@ -100,10 +101,9 @@ predict salary:</p>
             <Tex texContent="\hat{y_i} = \alpha_{j[i]} + \beta x_i"/>
           </div>
           <p>In the above equation, the vector of&nbsp;
-            <strong>fixed effects</strong>&nbsp; (constant slopes) is represented by the
+            <strong>fixed effects</strong>&nbsp; (constant slopes) is represented by the&nbsp;
             <em>
-              β</em>
-            character, while the set of&nbsp;
+              β</em>&nbsp;character, while the set of&nbsp;
             <strong>random intercepts</strong>&nbsp; is captured by the α. So, individual
             <code>i</code>
             in department
@@ -120,7 +120,7 @@ predict salary:</p>
         </div>
         break;
       case 4:
-        var ele = <div>
+        ele = <div>
           <h1>Random Slopes</h1>
           <p>Alternatively, we could imagine that faculty salaries increase at&nbsp;
             <strong>different rates</strong>&nbsp; depending on the department. We could
@@ -132,8 +132,8 @@ predict salary:</p>
           </div>
           <p>Here, the intercept (<em>β<sub>0</sub>
             </em>) is constant(fixed) for all individuals, but the slope (<em>β<sub>j</sub>
-            </em>) varies depending on the department (<code>j</code>) of individual
-            <code>i.</code>So, individual&nbsp;
+            </em>) varies depending on the department (<code>j</code>) of an individual (
+            <code>i.</code>). So, individual&nbsp;
             <code>i</code>
             in department&nbsp;
             <code>j</code>
@@ -142,14 +142,15 @@ predict salary:</p>
           <div className="eq-wrapper">
             <Tex texContent="\hat{salary_i} = \beta_0 + \beta_{1j[i]} * experience_i"/>
           </div>
-          <p>While This strategy allows us to capture variation in the&nbsp;
+          <p>While this strategy allows us to capture variation in the&nbsp;
             <em>change in salary</em>, it is clearly a poor fit for the data. We can,
-            however, combine these strategies for a better fitting model.
+            however, describe group-level variation in both slope and intercept for a better
+            fitting model.
           </p>
         </div>
         break;
       case 5:
-        var ele = <div>
+        ele = <div>
           <h1>Random Slopes + Intercepts</h1>
           <p>It's reasonable to image that the most realistic situation is a combination
             of the scenarios described above:</p>
@@ -166,12 +167,21 @@ predict salary:</p>
             <em>starting salary</em>&nbsp; for faculty member&nbsp;
             <code>i</code>&nbsp; depends on their department (<em>α<sub>j[i]</sub>
             </em>), and their annual raise also varies by department (<em>β<sub>j[i]</sub>.
-            </em>)
+            </em>):</p>
+            <div className="eq-wrapper">
+              <Tex
+                texContent="\hat{salary_i} = \beta_{0j[i]} + \beta_{1j[i]} * experience_i"/>
+            </div>
+            <p>
+            In order to implement any of these methods, you'll need to have a strong
+            understanding of the phenomenon you're modeling, and how that is captured in the
+            data. And, of course, you'll need to assess the performance of your models (not
+            described here).
           </p>
         </div>
         break;
       case 6:
-        var ele = <div>
+        ele = <div>
           <h1>About</h1>
           <p>This project was built by&nbsp;
             <a href="http://mfviz.com/" target="_blank">Michael Freeman</a>, a faculty member at the University of Washington&nbsp;<a href="https://ischool.uw.edu/" target="_blank">
@@ -190,9 +200,8 @@ predict salary:</p>
         </div>
         break;
       default:
-        var ele = '';
+        ele = '';
     }
-    console.log('styles ', this.props.styles)
     return <div className="Sections" style={this.props.styles}>
       {ele}
     </div>;

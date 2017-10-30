@@ -206,7 +206,6 @@ var ScatterPlot = function () {
                     .descendants()
                     .filter((d) => d.depth != 0)
                     .map(function (d) {
-                        console.log(d.data.color)
                         return {
                             x: d.x,
                             y: d.y,
@@ -236,9 +235,8 @@ var ScatterPlot = function () {
             } else {
                 chartData = data.scatter;
             }
-            // console.log('pack ', pack, 'chart data ', chartData) ele .select('.chartG')
-            // .transition()     .duration(duration * 3) .attr('transform', 'translate(' +
-            // margin.left + ',' + margin.top + ')') Draw markers
+            
+            // Draw markers
             let circles = ele
                 .select('.chartG')
                 .selectAll('circle')
