@@ -12,3 +12,10 @@
 .conclusion {
     margin-bottom: 400px;
 }
+
+.inline p {
+    margin-top:0px;
+    margin-bottom:0px;
+    display:inline-block;
+    line-height:initial;
+}

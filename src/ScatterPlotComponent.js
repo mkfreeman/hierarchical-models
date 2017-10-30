@@ -1,5 +1,5 @@
 // Scatterplot
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import * as d3 from 'd3';
 import './ScatterPlot.css';
 import ScatterPlot from './ScatterPlot';
@@ -32,11 +32,7 @@ class ScatterPlotComponent extends Component {
         // Call d3 update
         d3
             .select(this.root)
-            .datum({
-                scatter: this.props.data,
-                pack: this.props.data,
-                line: this.props.lineData
-            })
+            .datum({scatter: this.props.data, pack: this.props.data, line: this.props.lineData})
             .call(this.scatter);
     }
     // Update on new props
@@ -47,12 +43,18 @@ class ScatterPlotComponent extends Component {
 
     render() {
         // Expose HTML node via ref property
-        return (<div className="chart" width={ this.props.width } height={ this.props.height } ref={ (node) => {
-                                                                                         this.root = node;
-                                                                                     } } />);
+        return (<div
+            className="chart"
+            style={{
+            marginLeft: this.props.marginLeft
+        }}
+            width={this.props.width}
+            height={this.props.height}
+            ref={(node) => {
+            this.root = node;
+        }}/>);
     }
-}
-;
+};
 
 ScatterPlotComponent.defaultProps = {
     width: window.innerWidth * .6,

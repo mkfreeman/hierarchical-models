@@ -226,20 +226,19 @@ class App extends React.Component {
     // Get dimensions
     getDimensions() {
         let wrapper = document.getElementById('main-wrapper');
-        let fraction = window.innerWidth < 960
-            ? .45
-            : .75;
-        let width = wrapper == null
+        let fullWidth = wrapper == null
             ? 0
-            : wrapper.offsetWidth * fraction;
+            : wrapper.offsetWidth;
+        let fraction = window.innerWidth < 960
+            ? .55
+            : .75;
+        let width = fullWidth * fraction;
         let height = wrapper == null
             ? 0
             : window.innerHeight - 140;
 
-        let sectionWidth = wrapper == null
-            ? 0
-            : wrapper.offsetWidth * (1 - fraction);
-        return {width: width, height: height, sectionWidth: sectionWidth};
+        let sectionWidth = fullWidth * (.97 - fraction);
+        return {fullWidth: fullWidth, width: width, height: height, sectionWidth: sectionWidth};
     }
 
     // Resize
@@ -311,10 +310,9 @@ class App extends React.Component {
             ? "chevron-up"
             : "chevron-down"
 
+        let dims = this.getDimensions();
         let sectionStyle = {
-            width: this
-                .getDimensions()
-                .sectionWidth
+            width: dims.sectionWidth
         }
         return (
             <div>
@@ -357,6 +355,7 @@ class App extends React.Component {
                         data={chartData}
                         width={this.state.width}
                         height={this.state.height}
+                        marginLeft={dims.fullWidth - dims.width}
                         xTitle="Years of Experience"
                         yTitle="Salary"/> {elementList
                         .map(function (d, i) {
