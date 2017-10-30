@@ -26,8 +26,9 @@ body {
 
 h1 {
     font-weight: 300;
+    padding-top:40px;
     font-size: 2.5em;
-    margin-top:100px;
+    /* margin-top:100px; */
 }
 
 #intro {

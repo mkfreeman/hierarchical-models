@@ -23,3 +23,13 @@
 .katex {
     white-space: inherit;
 }
+
+.span-wrapper > span {
+    display:inline-block;
+    margin: 0px;    
+}
+
+.span-wrapper {
+    font-size: 1.1em;
+    margin-top: 10px;
+}
