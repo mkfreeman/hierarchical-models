@@ -54,9 +54,9 @@ we'll consider faculty who work in the&nbsp;
             }}>Biology</span>
             <span>, and&nbsp;</span>
             <span style={{
-              color: 'rgba(140, 86, 75, .5)'
+              color: 'rgba(31, 119, 180, .5)'
             }}>Statistics</span>
-            &nbsp; departments.
+            departments.
           </div>
         </div>
         break;
@@ -64,7 +64,7 @@ we'll consider faculty who work in the&nbsp;
         ele = <div>
           <h1>A Linear Approach</h1>
           <p>Let's imagine that you're trying to estimate faculty salaries based on their
-            number of years of experience. A simple, linear model could be
+            number of years of experience. A simple linear model could be
             used to estimate this relationship:
           </p>
           <div className="eq-wrapper">
