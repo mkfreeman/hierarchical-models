@@ -19,14 +19,14 @@ class Sections extends Component {
             <em>Mixed Effects Modeling</em>&nbsp;or by&nbsp;
             <a href="https://en.wikipedia.org/wiki/Multilevel_model" target="_blank">
               these other terms</a>. This is an approach for modeling&nbsp;
-            <strong>nested data</strong>. Keep reading to learn how to translated an
+            <strong>nested data</strong>. Keep reading to learn how to translate an
             understanding of your data into a hierarchical model specification.</p>
         </div>
         break;
       case 1:
         ele = <div>
           <h1>Nested Data</h1>
-          <p>You’ll frequently encounter nested data structures when doing analytical
+          <p>You'll frequently encounter nested data structures when doing analytical
             work. These are instances in which each observation is a member of a group, and
             you believe that group membership has an important effect on your outcome of
             interest. As we walk through this explanation, we'll consider this example</p>
@@ -63,8 +63,8 @@ we'll consider faculty who work in the&nbsp;
       case 2:
         ele = <div>
           <h1>A Linear Approach</h1>
-          <p>Let's imagine that you're trying to estimate faculty salary based on the
-            number of years of experience that they have. A simple (linear) model could be
+          <p>Let's imagine that you're trying to estimate faculty salaries based on their
+            number of years of experience. A simple, linear model could be
             used to estimate this relationship:
           </p>
           <div className="eq-wrapper">
@@ -79,8 +79,8 @@ predict salary:</p>
             <Tex texContent="\hat{salary_i} = \beta_0 + \beta_1 * experience_i"/>
           </div>
           <p>
-            While this provides some information about the observed relationship, it's clear
-            that there's variation in salary&nbsp;
+            While this provides some information about the observed relationship, it is clear
+            that there is variation in salary&nbsp;
             <strong>by department</strong>. The methods introduced below allow us to capture
             that variation in different ways.
           </p>
@@ -91,7 +91,7 @@ predict salary:</p>
           <h1>Random Intercepts</h1>
           <p>It may be the case that each&nbsp;
             <strong>department</strong>&nbsp; has a different starting salary for their
-            faculty members, and the annual salary increase rate is consistent across the
+            faculty members, while the annual rate at which salaries increase is consistent across the
             university. If we believe this to be the case, we would want to allow the&nbsp;
             <strong>intercept to vary</strong>&nbsp;
             <em>by group</em>. We could describe a&nbsp;
@@ -101,10 +101,10 @@ predict salary:</p>
             <Tex texContent="\hat{y_i} = \alpha_{j[i]} + \beta x_i"/>
           </div>
           <p>In the above equation, the vector of&nbsp;
-            <strong>fixed effects</strong>&nbsp; (constant slopes) is represented by the&nbsp;
+            <strong>fixed effects</strong>&nbsp; (constant slopes) is represented by &nbsp;
             <em>
-              β</em>&nbsp;character, while the set of&nbsp;
-            <strong>random intercepts</strong>&nbsp; is captured by the α. So, individual
+              β</em>&nbsp;, while the set of&nbsp;
+            <strong>random intercepts</strong>&nbsp; is captured by α. So, individual
             <code>i</code>
             in department
             <code>j</code>
@@ -114,8 +114,8 @@ predict salary:</p>
             <Tex texContent="\hat{salary_i} = \beta_{0j[i]} + \beta_1 * experience_i"/>
           </div>
           <p>This strategy allows us to capture variation in the starting salary of our
-            faculty. However, there may be addition information we want to incorporate into
-            our model
+            faculty. However, there may be additional information we want to incorporate into
+            our model.
           </p>
         </div>
         break;
@@ -125,7 +125,7 @@ predict salary:</p>
           <p>Alternatively, we could imagine that faculty salaries increase at&nbsp;
             <strong>different rates</strong>&nbsp; depending on the department. We could
             incorporate this idea into a statistical model by allowing the&nbsp;
-            <strong>slope</strong>&nbsp; to vary rather than the intercept. We could
+            <strong>slope</strong>&nbsp; to vary, rather than the intercept. We could
             formalize this with the following notation:</p>
           <div className="eq-wrapper">
             <Tex texContent="\hat{y_i} = \beta_0 + \beta_{j[i]}x_i"/>
@@ -152,7 +152,7 @@ predict salary:</p>
       case 5:
         ele = <div>
           <h1>Random Slopes + Intercepts</h1>
-          <p>It's reasonable to image that the most realistic situation is a combination
+          <p>It's reasonable to imagine that the most realistic situation is a combination
             of the scenarios described above:</p>
           <blockquote>Faculty salaries start at different levels&nbsp;
             <em>and</em>&nbsp; increase at different rates depending on their department.
