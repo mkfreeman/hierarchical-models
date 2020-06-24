@@ -119,7 +119,7 @@ class App extends React.Component {
         logPageView();
 
         // Page title
-        document.title = "Hierachical Models";
+        document.title = "Hierarchical Models";
         Events
             .scrollEvent
             .register('begin', function () {});
